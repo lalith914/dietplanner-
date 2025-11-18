@@ -465,17 +465,22 @@ const Index = () => {
           transition={{ duration: 0.8 }}
           className="max-w-6xl mx-auto"
         >
-          <motion.header
-            initial={{ y: -50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <h1 className="text-5xl font-bold text-foreground mb-3">Your Personalized Diet Plan</h1>
-            <p className="text-muted-foreground text-lg">Tailored to your goals and budget</p>
-          </motion.header>
-
-          <motion.div
+        <motion.header
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12"
+        >
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <svg width="50" height="50" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="30" cy="30" r="28" fill="#10b981" opacity="0.2" stroke="#10b981" strokeWidth="2"/>
+              <path d="M30 10 L35 25 L50 25 L38 35 L43 50 L30 40 L17 50 L22 35 L10 25 L25 25 Z" fill="#10b981"/>
+              <circle cx="30" cy="30" r="5" fill="#059669"/>
+            </svg>
+            <h1 className="text-5xl font-bold text-foreground">Your Personalized Diet Plan</h1>
+          </div>
+          <p className="text-muted-foreground text-lg">Tailored to your goals and budget</p>
+        </motion.header>          <motion.div
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -665,7 +670,17 @@ const Index = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h1 className="text-5xl font-bold text-foreground mb-3">Indian Diet Planner</h1>
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="30" cy="30" r="28" fill="#10b981" opacity="0.2" stroke="#10b981" strokeWidth="2"/>
+              <path d="M30 10 L35 25 L50 25 L38 35 L43 50 L30 40 L17 50 L22 35 L10 25 L25 25 Z" fill="#10b981"/>
+              <circle cx="30" cy="30" r="5" fill="#059669"/>
+            </svg>
+            <div>
+              <h1 className="text-5xl font-bold text-foreground">Nourish India</h1>
+              <p className="text-primary font-semibold">Diet Planner</p>
+            </div>
+          </div>
           <p className="text-muted-foreground text-lg">
             Get your personalized meal plan based on your goals and budget
           </p>
