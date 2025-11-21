@@ -2,6 +2,84 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Calculator, Utensils, Activity, DollarSign } from "lucide-react";
 
+interface FormData {
+  age: number;
+  sex: "male" | "female" | "";
+  weight: number;
+  height: number;
+  activityLevel: "sedentary" | "light" | "moderate" | "active" | "veryActive" | "";
+  goal: "lose" | "maintain" | "gain" | "";
+  dietPreference: "veg" | "nonveg" | "both" | "";
+  budget: number;
+}
+
+// Duplicate interfaces removed
+
+
+
+// ...existing code for Index component follows here (starting with: const Index = () => { ... )
+
+
+
+const Index = () => {
+  const [formData, setFormData] = useState<FormData>({
+    age: 0,
+    sex: "",
+    weight: 0,
+    height: 0,
+    activityLevel: "",
+    goal: "",
+    dietPreference: "",
+    budget: 0,
+  });
+  const [results, setResults] = useState<Results | null>(null);
+  const [showResults, setShowResults] = useState<boolean>(false);
+
+
+  // Helper: Calculate BMI
+  function calculateBMI(weight: number, height: number): number {
+    if (!weight || !height) return 0;
+    return weight / ((height / 100) * (height / 100));
+  }
+
+  // Helper: Calculate BMR
+  function calculateBMR(weight: number, height: number, age: number, sex: string): number {
+    if (!weight || !height || !age || !sex) return 0;
+    if (sex === "male") {
+      return 10 * weight + 6.25 * height - 5 * age + 5;
+    } else {
+      return 10 * weight + 6.25 * height - 5 * age - 161;
+    }
+  }
+
+  // Goal adjustments for calories
+  const GOAL_ADJUSTMENTS: Record<string, number> = {
+    lose: -400,
+    maintain: 0,
+    gain: 400,
+  };
+
+  // Helper: Update form data
+  function updateFormData<K extends keyof FormData>(key: K, value: FormData[K]) {
+    setFormData((prev) => ({ ...prev, [key]: value }));
+  }
+
+  // Helper: Reset form and results
+  function handleReset() {
+    setFormData({
+      age: 0,
+      sex: "",
+      weight: 0,
+      height: 0,
+      activityLevel: "",
+      goal: "",
+      dietPreference: "",
+      budget: 0,
+    });
+    setResults(null);
+    setShowResults(false);
+  }
+
 interface FoodItem {
   name: string;
   quantity: string;
@@ -22,17 +100,6 @@ interface MealPlan {
   drink: FoodItem;
 }
 
-interface FormData {
-  age: number;
-  sex: "male" | "female" | "";
-  weight: number;
-  height: number;
-  activityLevel: "sedentary" | "light" | "moderate" | "active" | "veryActive" | "";
-  goal: "lose" | "maintain" | "gain" | "";
-  dietPreference: "veg" | "nonveg" | "both" | "";
-  budget: number;
-}
-
 interface Results {
   bmi: number;
   bmr: number;
@@ -46,66 +113,7 @@ interface Results {
   totalCost: number;
 }
 
-const FOOD_DATABASE = {
-  breakfast: [
-    { name: "Poha", quantity: "1 plate (150g)", calories: 250, protein: 5, carbs: 45, fats: 4, fiber: 3, price: 25, type: "veg" as const },
-    { name: "Upma", quantity: "1 bowl (150g)", calories: 200, protein: 6, carbs: 40, fats: 3, fiber: 2, price: 20, type: "veg" as const },
-    { name: "Idli (3 pcs)", quantity: "3 pcs (180g)", calories: 180, protein: 6, carbs: 38, fats: 1, fiber: 2, price: 30, type: "veg" as const },
-    { name: "Dosa", quantity: "1 large (120g)", calories: 220, protein: 5, carbs: 35, fats: 6, fiber: 2, price: 35, type: "veg" as const },
-    { name: "Paratha with Curd", quantity: "1 paratha + 100g curd", calories: 320, protein: 9, carbs: 48, fats: 10, fiber: 3, price: 40, type: "veg" as const },
-    { name: "Aloo Paratha", quantity: "1 paratha (120g)", calories: 350, protein: 7, carbs: 55, fats: 11, fiber: 4, price: 45, type: "veg" as const },
-    { name: "Bread Omelette", quantity: "2 bread + 2 eggs", calories: 280, protein: 13, carbs: 28, fats: 12, fiber: 2, price: 30, type: "nonveg" as const },
-    { name: "Egg Bhurji", quantity: "2 eggs (100g)", calories: 240, protein: 12, carbs: 6, fats: 18, fiber: 1, price: 35, type: "nonveg" as const },
-    { name: "Masala Oats", quantity: "1 bowl (40g)", calories: 180, protein: 6, carbs: 30, fats: 3, fiber: 4, price: 25, type: "veg" as const },
-    { name: "Vermicelli Upma", quantity: "1 bowl (150g)", calories: 210, protein: 5, carbs: 38, fats: 4, fiber: 2, price: 22, type: "veg" as const },
-  ],
-  lunch: [
-    { name: "Dal Rice", quantity: "1 cup dal + 1 cup rice", calories: 350, protein: 12, carbs: 65, fats: 4, fiber: 5, price: 50, type: "veg" as const },
-    { name: "Rajma Rice", quantity: "1 cup rajma + 1 cup rice", calories: 420, protein: 14, carbs: 75, fats: 6, fiber: 7, price: 60, type: "veg" as const },
-    { name: "Chole Rice", quantity: "1 cup chole + 1 cup rice", calories: 450, protein: 15, carbs: 78, fats: 7, fiber: 8, price: 65, type: "veg" as const },
-    { name: "Veg Pulao", quantity: "1 bowl (200g)", calories: 380, protein: 8, carbs: 70, fats: 7, fiber: 4, price: 55, type: "veg" as const },
-    { name: "Roti with Dal and Sabzi", quantity: "2 roti + 1 cup dal + 1 cup sabzi", calories: 400, protein: 13, carbs: 68, fats: 5, fiber: 7, price: 60, type: "veg" as const },
-    { name: "Paneer Sabzi with Roti", quantity: "2 roti + 1 cup paneer sabzi", calories: 480, protein: 18, carbs: 55, fats: 16, fiber: 5, price: 90, type: "veg" as const },
-    { name: "Chicken Curry with Rice", quantity: "1 cup curry + 1 cup rice", calories: 550, protein: 28, carbs: 70, fats: 18, fiber: 3, price: 120, type: "nonveg" as const },
-    { name: "Egg Curry with Rice", quantity: "2 eggs + 1 cup rice", calories: 450, protein: 20, carbs: 65, fats: 12, fiber: 2, price: 70, type: "nonveg" as const },
-    { name: "Fish Curry with Rice", quantity: "1 cup curry + 1 cup rice", calories: 500, protein: 25, carbs: 68, fats: 15, fiber: 2, price: 150, type: "nonveg" as const },
-    { name: "Sambar Rice", quantity: "1 bowl (200g)", calories: 370, protein: 8, carbs: 72, fats: 3, fiber: 5, price: 55, type: "veg" as const },
-  ],
-  dinner: [
-    { name: "Khichdi", quantity: "1 bowl (200g)", calories: 300, protein: 9, carbs: 55, fats: 5, fiber: 4, price: 40, type: "veg" as const },
-    { name: "Dal Roti", quantity: "2 roti + 1 cup dal", calories: 350, protein: 12, carbs: 60, fats: 4, fiber: 5, price: 50, type: "veg" as const },
-    { name: "Veg Biryani", quantity: "1 bowl (200g)", calories: 420, protein: 9, carbs: 75, fats: 8, fiber: 4, price: 80, type: "veg" as const },
-    { name: "Palak Paneer with Roti", quantity: "2 roti + 1 cup palak paneer", calories: 450, protein: 17, carbs: 52, fats: 15, fiber: 5, price: 95, type: "veg" as const },
-    { name: "Sabzi Roti", quantity: "2 roti + 1 cup sabzi", calories: 320, protein: 8, carbs: 58, fats: 3, fiber: 5, price: 55, type: "veg" as const },
-    { name: "Grilled Chicken with Roti", quantity: "2 roti + 100g chicken", calories: 480, protein: 30, carbs: 52, fats: 14, fiber: 3, price: 130, type: "nonveg" as const },
-    { name: "Egg Fried Rice", quantity: "1 bowl (200g)", calories: 400, protein: 14, carbs: 68, fats: 10, fiber: 3, price: 75, type: "nonveg" as const },
-    { name: "Mixed Dal with Rice", quantity: "1 cup dal + 1 cup rice", calories: 360, protein: 13, carbs: 65, fats: 4, fiber: 6, price: 50, type: "veg" as const },
-    { name: "Paneer Tikka with Roti", quantity: "2 roti + 1 cup paneer tikka", calories: 500, protein: 20, carbs: 54, fats: 18, fiber: 4, price: 110, type: "veg" as const },
-    { name: "Butter Chicken with Naan", quantity: "1 naan + 1 cup butter chicken", calories: 580, protein: 32, carbs: 60, fats: 22, fiber: 3, price: 150, type: "nonveg" as const },
-  ],
-  snack: [
-    { name: "Samosa (2 pcs)", quantity: "2 pcs (100g)", calories: 260, protein: 5, carbs: 32, fats: 12, fiber: 2, price: 20, type: "veg" as const },
-    { name: "Banana", quantity: "1 medium (120g)", calories: 105, protein: 1, carbs: 27, fats: 0, fiber: 3, price: 10, type: "veg" as const },
-    { name: "Apple", quantity: "1 medium (180g)", calories: 95, protein: 0, carbs: 25, fats: 0, fiber: 4, price: 30, type: "veg" as const },
-    { name: "Roasted Chana", quantity: "60g", calories: 150, protein: 8, carbs: 18, fats: 6, fiber: 3, price: 15, type: "veg" as const },
-    { name: "Biscuits (4 pcs)", quantity: "4 pcs (100g)", calories: 200, protein: 3, carbs: 28, fats: 8, fiber: 1, price: 20, type: "veg" as const },
-    { name: "Pakora", quantity: "5 pcs (100g)", calories: 180, protein: 4, carbs: 22, fats: 10, fiber: 1, price: 25, type: "veg" as const },
-    { name: "Boiled Egg", quantity: "1 piece (50g)", calories: 155, protein: 13, carbs: 1, fats: 11, fiber: 0, price: 12, type: "nonveg" as const },
-    { name: "Mixed Nuts", quantity: "40g", calories: 170, protein: 8, carbs: 10, fats: 18, fiber: 2, price: 40, type: "veg" as const },
-    { name: "Fruit Chaat", quantity: "1 cup (150g)", calories: 120, protein: 1, carbs: 28, fats: 1, fiber: 4, price: 35, type: "veg" as const },
-    { name: "Peanuts", quantity: "50g", calories: 160, protein: 9, carbs: 8, fats: 22, fiber: 3, price: 15, type: "veg" as const },
-  ],
-  drink: [
-    { name: "Chai", quantity: "1 cup (200ml)", calories: 80, protein: 2, carbs: 12, fats: 2, fiber: 0, price: 10, type: "veg" as const },
-    { name: "Coffee", quantity: "1 cup (200ml)", calories: 60, protein: 1, carbs: 6, fats: 1, fiber: 0, price: 15, type: "veg" as const },
-    { name: "Lassi", quantity: "1 cup (200ml)", calories: 150, protein: 6, carbs: 18, fats: 3, fiber: 0, price: 30, type: "veg" as const },
-    { name: "Buttermilk", quantity: "1 cup (200ml)", calories: 60, protein: 3, carbs: 4, fats: 1, fiber: 0, price: 15, type: "veg" as const },
-    { name: "Lemon Water", quantity: "1 glass (200ml)", calories: 10, protein: 0, carbs: 2, fats: 0, fiber: 0, price: 5, type: "veg" as const },
-    { name: "Coconut Water", quantity: "1 glass (200ml)", calories: 45, protein: 1, carbs: 9, fats: 0, fiber: 0, price: 30, type: "veg" as const },
-    { name: "Nimbu Pani", quantity: "1 glass (200ml)", calories: 40, protein: 0, carbs: 10, fats: 0, fiber: 0, price: 10, type: "veg" as const },
-    { name: "Milk", quantity: "1 cup (200ml)", calories: 150, protein: 8, carbs: 12, fats: 8, fiber: 0, price: 20, type: "veg" as const },
-  ],
-};
+// Old FOOD_DATABASE removed. Only the new FOOD_DATABASE should remain below.
 
 const ACTIVITY_FACTORS = {
   sedentary: 1.2,
@@ -115,42 +123,160 @@ const ACTIVITY_FACTORS = {
   veryActive: 1.9,
 };
 
-const GOAL_ADJUSTMENTS = {
-  lose: -500,
-  maintain: 0,
-  gain: 500,
+const FOOD_DATABASE = {
+  breakfast: [
+    // Vegetarian - South Indian / Healthy
+    { name: "Ragi Porridge (Finger Millet)", quantity: "1 cup (200g)", calories: 220, protein: 6, carbs: 42, fats: 3, fiber: 6, price: 30, type: "veg" as const },
+    { name: "Broken Wheat Upma (Dalia Upma)", quantity: "1 cup (200g)", calories: 210, protein: 7, carbs: 40, fats: 4, fiber: 5, price: 25, type: "veg" as const },
+    { name: "Idli (3 small, ragi + rice blend)", quantity: "3 pieces (130g)", calories: 170, protein: 6, carbs: 36, fats: 1, fiber: 2, price: 28, type: "veg" as const },
+    { name: "Steamed Rava Idli with Veg", quantity: "3 pieces (140g)", calories: 190, protein: 7, carbs: 38, fats: 2, fiber: 3, price: 32, type: "veg" as const },
+    { name: "Oats Poha with Vegetables", quantity: "1 cup (180g)", calories: 200, protein: 8, carbs: 36, fats: 4, fiber: 6, price: 30, type: "veg" as const },
+
+    // Vegetarian - Breads (healthier versions)
+    { name: "Multigrain Paratha (1) + Curd", quantity: "1 piece (120g) + 100g curd", calories: 260, protein: 10, carbs: 34, fats: 8, fiber: 6, price: 40, type: "veg" as const },
+    { name: "Besan & Oats Chilla (2)", quantity: "2 pieces (160g)", calories: 220, protein: 14, carbs: 28, fats: 6, fiber: 6, price: 28, type: "veg" as const },
+    { name: "Sprouted Moong Toast (2 slices)", quantity: "2 slices (150g)", calories: 230, protein: 12, carbs: 32, fats: 6, fiber: 7, price: 35, type: "veg" as const },
+
+    // Vegetarian - Cereals & Protein-rich
+    { name: "Greek Yogurt + Fruit + Seeds", quantity: "1 cup (200g)", calories: 220, protein: 14, carbs: 25, fats: 6, fiber: 4, price: 60, type: "veg" as const },
+    { name: "Moong Dal Cheela with Paneer Filling", quantity: "2 pieces (200g)", calories: 260, protein: 18, carbs: 30, fats: 8, fiber: 5, price: 45, type: "veg" as const },
+    { name: "Quinoa Upma with Veggies", quantity: "1 cup (200g)", calories: 240, protein: 9, carbs: 38, fats: 5, fiber: 6, price: 60, type: "veg" as const },
+    { name: "Rava (Semolina) Dosa - minimal oil", quantity: "1 piece (140g)", calories: 180, protein: 6, carbs: 34, fats: 3, fiber: 2, price: 30, type: "veg" as const },
+
+    // Vegetarian - Light & quick
+    { name: "Fruit Bowl (seasonal mix)", quantity: "1 bowl (200g)", calories: 120, protein: 2, carbs: 30, fats: 1, fiber: 5, price: 45, type: "veg" as const },
+    { name: "Poached Eggs on Multigrain Toast (veg option = avocado)", quantity: "2 eggs + 1 slice (or avocado)", calories: 270, protein: 16, carbs: 20, fats: 12, fiber: 4, price: 50, type: "veg" as const },
+
+    // Non-Vegetarian - Healthy
+    { name: "Egg White Omelette with Spinach & Tomato", quantity: "150g (3 egg whites)", calories: 120, protein: 20, carbs: 4, fats: 3, fiber: 2, price: 35, type: "nonveg" as const },
+    { name: "Masala Omelette (1 whole + 2 whites) with Ragi Toast", quantity: "200g", calories: 260, protein: 20, carbs: 28, fats: 8, fiber: 4, price: 45, type: "nonveg" as const },
+    { name: "Smoked Salmon on Multigrain (small serving)", quantity: "80g salmon + 1 slice", calories: 220, protein: 18, carbs: 18, fats: 10, fiber: 2, price: 180, type: "nonveg" as const },
+
+    // Non-Vegetarian - Protein-forward
+    { name: "Egg Bhurji with Mixed Veg (minimal oil)", quantity: "1 plate (180g)", calories: 240, protein: 16, carbs: 10, fats: 14, fiber: 3, price: 45, type: "nonveg" as const },
+    { name: "Chicken & Veg Upma (small)", quantity: "1 cup (200g)", calories: 300, protein: 20, carbs: 30, fats: 8, fiber: 3, price: 70, type: "nonveg" as const }
+  ],
+
+  lunch: [
+    // Vegetarian - Dal & Rice / Balanced plates
+    { name: "Brown Rice with Toor Dal & Mixed Veg", quantity: "1 plate (300g)", calories: 420, protein: 15, carbs: 68, fats: 7, fiber: 8, price: 70, type: "veg" as const },
+    { name: "Quinoa & Mixed Bean Bowl (Indian spices)", quantity: "1 plate (300g)", calories: 420, protein: 18, carbs: 52, fats: 9, fiber: 10, price: 110, type: "veg" as const },
+    { name: "Sprouted Moong Salad + 1 Roti (multigrain)", quantity: "1 plate + 1 roti", calories: 360, protein: 18, carbs: 40, fats: 6, fiber: 12, price: 65, type: "veg" as const },
+
+    // Vegetarian - Lighter rice dishes
+    { name: "Lemon Brown Rice with Roasted Veg", quantity: "1 plate (300g)", calories: 380, protein: 8, carbs: 64, fats: 6, fiber: 6, price: 60, type: "veg" as const },
+    { name: "Millet Pulao (Bajra/Jowar) with Raita", quantity: "1 plate (300g)", calories: 400, protein: 12, carbs: 58, fats: 8, fiber: 8, price: 85, type: "veg" as const },
+
+    // Vegetarian - Roti Based (healthier)
+    { name: "2 Multigrain Rotis + Paneer Bhurji (low-oil)", quantity: "2 rotis + 150g", calories: 420, protein: 24, carbs: 46, fats: 14, fiber: 6, price: 95, type: "veg" as const },
+    { name: "2 Whole Wheat Rotis + Mixed Veg + Dal", quantity: "2 rotis + 200g veg + dal", calories: 410, protein: 16, carbs: 58, fats: 8, fiber: 9, price: 70, type: "veg" as const },
+    { name: "Chana Masala (light oil) + Brown Rice", quantity: "1 plate (280g)", calories: 420, protein: 16, carbs: 62, fats: 8, fiber: 10, price: 70, type: "veg" as const },
+
+    // Vegetarian - Protein-rich specials
+    { name: "Paneer Tikka Bowl with Millet Rotis", quantity: "1 plate (280g)", calories: 480, protein: 28, carbs: 45, fats: 18, fiber: 5, price: 140, type: "veg" as const },
+    { name: "Mixed Lentil Curry (Masoor+Toor+Moong) + Roti", quantity: "1 plate", calories: 380, protein: 20, carbs: 50, fats: 6, fiber: 10, price: 60, type: "veg" as const },
+
+    // Non-Vegetarian - Balanced lunch
+    { name: "Grilled Chicken Salad + 1 Multigrain Roti", quantity: "200g chicken + 1 roti", calories: 420, protein: 40, carbs: 30, fats: 10, fiber: 6, price: 160, type: "nonveg" as const },
+    { name: "Tandoori Salmon with Brown Rice & Salad", quantity: "150g salmon + 120g rice", calories: 520, protein: 36, carbs: 48, fats: 18, fiber: 3, price: 320, type: "nonveg" as const },
+    { name: "Chicken Curry (light) + Brown Rice", quantity: "180g chicken + 150g rice", calories: 480, protein: 36, carbs: 56, fats: 10, fiber: 2, price: 150, type: "nonveg" as const },
+
+    // Non-Vegetarian - Seafood / Lean meats
+    { name: "Fish Curry (made with minimal oil) + Millet", quantity: "180g fish + 150g millet", calories: 500, protein: 38, carbs: 50, fats: 14, fiber: 2, price: 220, type: "nonveg" as const },
+    { name: "Prawns Stir-fry + Veg Rice", quantity: "150g prawns + 200g rice", calories: 430, protein: 32, carbs: 50, fats: 8, fiber: 2, price: 240, type: "nonveg" as const },
+
+    // Healthy special combos
+    { name: "Bajra Roti (2) + Mixed Vegetable Kurma (low-oil)", quantity: "2 rotis + 200g veg", calories: 390, protein: 10, carbs: 56, fats: 10, fiber: 8, price: 80, type: "veg" as const },
+    { name: "Rajma with Brown Rice (reduced oil)", quantity: "1 plate (300g)", calories: 420, protein: 16, carbs: 62, fats: 6, fiber: 10, price: 70, type: "veg" as const },
+
+    // Light bowls
+    { name: "Kitchari (Moong+Brown Rice) with Ghee (small)", quantity: "1 plate (300g)", calories: 360, protein: 14, carbs: 58, fats: 6, fiber: 6, price: 60, type: "veg" as const }
+  ],
+
+  dinner: [
+    // Vegetarian - Lighter dinners
+    { name: "Khichdi (Moong+Brown Rice) + Veg Salad", quantity: "1 plate (300g)", calories: 340, protein: 14, carbs: 54, fats: 6, fiber: 6, price: 55, type: "veg" as const },
+    { name: "Mixed Dal Soup + Multigrain Toast", quantity: "1 bowl + 1 slice", calories: 300, protein: 18, carbs: 38, fats: 6, fiber: 8, price: 60, type: "veg" as const },
+    { name: "Grilled Vegetable Platter + 1 Roti", quantity: "1 plate", calories: 320, protein: 8, carbs: 48, fats: 8, fiber: 10, price: 75, type: "veg" as const },
+
+    // Vegetarian - Protein focused
+    { name: "Moong Dal Cheela (3) + Mint Chutney", quantity: "3 pieces (240g)", calories: 330, protein: 20, carbs: 42, fats: 8, fiber: 8, price: 60, type: "veg" as const },
+    { name: "Palak Paneer (light oil) + 2 Rotis (multigrain)", quantity: "1 plate", calories: 440, protein: 26, carbs: 44, fats: 16, fiber: 6, price: 120, type: "veg" as const },
+
+    // Vegetarian - Millets & low-carb
+    { name: "Bajra Khichdi with Bottle Gourd", quantity: "1 plate (300g)", calories: 360, protein: 12, carbs: 52, fats: 6, fiber: 8, price: 70, type: "veg" as const },
+    { name: "Stir-fried Tofu with Veg + 1 Roti", quantity: "1 plate", calories: 380, protein: 22, carbs: 36, fats: 14, fiber: 6, price: 110, type: "veg" as const },
+
+    // Non-Vegetarian - Light dinners
+    { name: "Grilled Chicken with Steamed Veg (no roti)", quantity: "200g chicken + 150g veg", calories: 380, protein: 44, carbs: 18, fats: 10, fiber: 6, price: 160, type: "nonveg" as const },
+    { name: "Tandoori Fish + Salad", quantity: "180g fish + salad", calories: 360, protein: 40, carbs: 10, fats: 12, fiber: 4, price: 220, type: "nonveg" as const },
+
+    // Non-Vegetarian - Protein dinners
+    { name: "Egg Curry (2 eggs) + 1 Multigrain Roti", quantity: "2 eggs + 1 roti", calories: 320, protein: 20, carbs: 28, fats: 12, fiber: 3, price: 80, type: "nonveg" as const },
+    { name: "Prawn & Veg Stir Fry + Small Quinoa", quantity: "150g prawns + 100g quinoa", calories: 420, protein: 34, carbs: 44, fats: 8, fiber: 4, price: 260, type: "nonveg" as const },
+
+    // Comfort-light
+    { name: "Vegetable Soup + Whole Wheat Bread (2 slices)", quantity: "1 bowl + 2 slices", calories: 260, protein: 8, carbs: 38, fats: 6, fiber: 8, price: 55, type: "veg" as const },
+    { name: "Methi Thepla (2) + Low-fat Curd", quantity: "2 pieces + 100g curd", calories: 300, protein: 10, carbs: 40, fats: 8, fiber: 6, price: 50, type: "veg" as const },
+
+    // Heavier healthy options (for athletes / high needs)
+    { name: "Lean Mutton Stew (small) + Millet Roti", quantity: "150g mutton + 1 roti", calories: 500, protein: 36, carbs: 40, fats: 18, fiber: 2, price: 220, type: "nonveg" as const },
+    { name: "Chicken Shorba + Brown Rice (small)", quantity: "1 bowl + 100g rice", calories: 360, protein: 30, carbs: 30, fats: 8, fiber: 2, price: 140, type: "nonveg" as const }
+  ],
+
+  snack: [
+    // Vegetarian - Savory healthy
+    { name: "Roasted Chana + Peanuts Mix (50g)", quantity: "50g", calories: 260, protein: 13, carbs: 20, fats: 14, fiber: 7, price: 25, type: "veg" as const },
+    { name: "Baked Samosa (1) with Salad", quantity: "1 piece (80g)", calories: 160, protein: 4, carbs: 24, fats: 6, fiber: 3, price: 20, type: "veg" as const },
+    { name: "Makhana (roasted, light seasoning)", quantity: "50g", calories: 70, protein: 3, carbs: 14, fats: 1, fiber: 2, price: 40, type: "veg" as const },
+
+    // Vegetarian - Nuts, fruits
+    { name: "Almonds (20g) + Walnuts (10g)", quantity: "30g", calories: 190, protein: 6, carbs: 4, fats: 16, fiber: 3, price: 45, type: "veg" as const },
+    { name: "Apple + Peanut Butter (1 tbsp)", quantity: "1 apple + 15g PB", calories: 220, protein: 4, carbs: 32, fats: 9, fiber: 5, price: 50, type: "veg" as const },
+
+    // Vegetarian - Savory low-cal
+    { name: "Cucumber & Carrot Sticks + Hummus (2 tbsp)", quantity: "150g veg + 30g hummus", calories: 140, protein: 4, carbs: 14, fats: 8, fiber: 4, price: 45, type: "veg" as const },
+    { name: "Sprouted Moong Chaat (light)", quantity: "1 cup (150g)", calories: 160, protein: 12, carbs: 22, fats: 2, fiber: 8, price: 40, type: "veg" as const },
+
+    // Vegetarian - Sweets (healthier)
+    { name: "Dates (3) + Mixed Nuts (10g)", quantity: "approx 40g", calories: 150, protein: 3, carbs: 30, fats: 5, fiber: 4, price: 30, type: "veg" as const },
+
+    // Non-Vegetarian - Protein snacks
+    { name: "Boiled Egg (1) + Sprouts Salad (small)", quantity: "1 egg + 50g sprouts", calories: 190, protein: 16, carbs: 6, fats: 10, fiber: 2, price: 30, type: "nonveg" as const },
+    { name: "Grilled Chicken Strips (100g)", quantity: "100g", calories: 150, protein: 28, carbs: 2, fats: 4, fiber: 0, price: 90, type: "nonveg" as const },
+
+    // Packable / on-the-go
+    { name: "Home-made Trail Mix (30g)", quantity: "30g", calories: 160, protein: 4, carbs: 12, fats: 10, fiber: 3, price: 35, type: "veg" as const },
+    { name: "Whole Fruit (Guava / Orange / Pear)", quantity: "1 medium", calories: 80, protein: 2, carbs: 18, fats: 0, fiber: 5, price: 25, type: "veg" as const },
+
+    // Healthy packaged alternatives
+    { name: "Roasted Fox Nuts (Makhana) Masala (50g)", quantity: "50g", calories: 140, protein: 4, carbs: 28, fats: 1, fiber: 2, price: 60, type: "veg" as const },
+    { name: "Baked Sweet Potato Wedges (150g)", quantity: "150g", calories: 140, protein: 2, carbs: 32, fats: 0, fiber: 4, price: 35, type: "veg" as const }
+  ],
+
+  drink: [
+    // Hot & low-calorie
+    { name: "Green Tea - Lemon & Honey (no sugar)", quantity: "1 cup (200ml)", calories: 10, protein: 0, carbs: 2, fats: 0, fiber: 0, price: 15, type: "veg" as const },
+    { name: "Herbal Tulsi Tea", quantity: "1 cup (200ml)", calories: 5, protein: 0, carbs: 1, fats: 0, fiber: 0, price: 12, type: "veg" as const },
+
+    // Dairy & protein-rich
+    { name: "Skim Milk (1 cup)", quantity: "200ml", calories: 90, protein: 9, carbs: 12, fats: 0, fiber: 0, price: 20, type: "veg" as const },
+    { name: "Buttermilk (chaas) - no added sugar", quantity: "1 glass (200ml)", calories: 50, protein: 3, carbs: 4, fats: 1, fiber: 0, price: 12, type: "veg" as const },
+
+    // Smoothies & shakes (healthy)
+    { name: "Banana+Spinach Protein Smoothie (whey or pea)", quantity: "1 glass (300ml)", calories: 220, protein: 18, carbs: 30, fats: 4, fiber: 6, price: 80, type: "veg" as const },
+    { name: "Mango Lassi (low sugar, small)", quantity: "1 glass (200ml)", calories: 150, protein: 6, carbs: 24, fats: 3, fiber: 1, price: 50, type: "veg" as const },
+
+    // Juices & hydrating
+    { name: "Coconut Water (fresh)", quantity: "1 glass (300ml)", calories: 60, protein: 2, carbs: 12, fats: 0, fiber: 0, price: 35, type: "veg" as const },
+    { name: "Nimbu Pani (no sugar, salted)", quantity: "1 glass (200ml)", calories: 8, protein: 0, carbs: 1, fats: 0, fiber: 0, price: 8, type: "veg" as const },
+    { name: "Carrot-Apple Juice (no sugar)", quantity: "1 glass (200ml)", calories: 90, protein: 1, carbs: 22, fats: 0, fiber: 3, price: 45, type: "veg" as const },
+
+    // Traditional tonics & warm drinks
+    { name: "Turmeric Milk (golden milk, low-fat)", quantity: "1 cup (200ml)", calories: 120, protein: 6, carbs: 10, fats: 4, fiber: 0, price: 30, type: "veg" as const },
+    { name: "Jeera Water (warm)", quantity: "1 glass (200ml)", calories: 5, protein: 0, carbs: 1, fats: 0, fiber: 0, price: 5, type: "veg" as const }
+  ]
 };
-
-const Index = () => {
-  const [formData, setFormData] = useState<FormData>({
-    age: 0,
-    sex: "",
-    weight: 0,
-    height: 0,
-    activityLevel: "",
-    goal: "",
-    dietPreference: "",
-    budget: 0,
-  });
-
-  const [results, setResults] = useState<Results | null>(null);
-  const [showResults, setShowResults] = useState(false);
-  const updateFormData = (field: keyof FormData, value: any) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const calculateBMI = (weight: number, height: number): number => {
-    const heightInMeters = height / 100;
-    return weight / (heightInMeters * heightInMeters);
-  };
-
-  const calculateBMR = (weight: number, height: number, age: number, sex: string): number => {
-    if (sex === "male") {
-      return 10 * weight + 6.25 * height - 5 * age + 5;
-    } else {
-      return 10 * weight + 6.25 * height - 5 * age - 161;
-    }
-  };
 
   const selectBestFood = (
     foods: FoodItem[],
@@ -158,18 +284,39 @@ const Index = () => {
     maxBudget: number,
     dietPref: string
   ): FoodItem => {
-    let filtered = foods.filter((food) => {
-      if (dietPref === "veg") return food.type === "veg";
-      if (dietPref === "nonveg") return food.type === "nonveg";
-      return true;
-    });
+    let filtered = foods;
 
-    if (filtered.length === 0) filtered = foods.filter((f) => f.type === "veg");
+    // Filter by diet preference
+    if (dietPref === "veg") {
+      filtered = foods.filter((food) => food.type === "veg");
+    } else if (dietPref === "nonveg") {
+      filtered = foods.filter((food) => food.type === "nonveg");
+    } else if (dietPref === "both") {
+      // For "both", randomly choose between veg or nonveg to add variety
+      const vegItems = foods.filter((food) => food.type === "veg");
+      const nonVegItems = foods.filter((food) => food.type === "nonveg");
+      
+      // 50-50 chance to pick from veg or nonveg for variety
+      filtered = Math.random() > 0.5 ? nonVegItems : vegItems;
+      
+      // If one category is empty, use the other
+      if (filtered.length === 0) {
+        filtered = vegItems.length > 0 ? vegItems : nonVegItems;
+      }
+    }
+
+    // Fallback to all veg if filter is empty
+    if (filtered.length === 0) {
+      filtered = foods.filter((f) => f.type === "veg");
+    }
+
+    // Sort by calorie match and budget fit
     filtered.sort((a, b) => {
       const aDiff = Math.abs(a.calories - targetCalories);
       const bDiff = Math.abs(b.calories - targetCalories);
       const aBudgetFit = a.price <= maxBudget ? 0 : a.price - maxBudget;
       const bBudgetFit = b.price <= maxBudget ? 0 : b.price - maxBudget;
+      
       if (aBudgetFit !== bBudgetFit) return aBudgetFit - bBudgetFit;
       return aDiff - bDiff;
     });
@@ -183,6 +330,7 @@ const Index = () => {
     const activityFactor = ACTIVITY_FACTORS[formData.activityLevel as keyof typeof ACTIVITY_FACTORS];
     const goalAdjustment = GOAL_ADJUSTMENTS[formData.goal as keyof typeof GOAL_ADJUSTMENTS];
     const targetCalories = bmr * activityFactor + goalAdjustment;
+
     const calorieDistribution = {
       breakfast: targetCalories * 0.25,
       lunch: targetCalories * 0.35,
@@ -280,10 +428,10 @@ const Index = () => {
       targetCalories: Math.round(targetCalories),
       mealPlan,
       totalCalories,
-      totalProtein,
-      totalCarbs,
-      totalFats,
-      totalFiber,
+      totalProtein: Math.round(totalProtein * 10) / 10,
+      totalCarbs: Math.round(totalCarbs * 10) / 10,
+      totalFats: Math.round(totalFats * 10) / 10,
+      totalFiber: Math.round(totalFiber * 10) / 10,
       totalCost,
     };
   };
@@ -307,184 +455,7 @@ const Index = () => {
     setResults(calculatedResults);
     setShowResults(true);
   };
-
-  const handleReset = () => {
-    setShowResults(false);
-    setResults(null);
-    setFormData({
-      age: 0,
-      sex: "",
-      weight: 0,
-      height: 0,
-      activityLevel: "",
-      goal: "",
-      dietPreference: "",
-      budget: 0,
-    });
-  };
-
-  if (showResults && results) {
-    return (
-      <div className="min-h-screen bg-gradient-main px-4 py-8">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-          className="max-w-6xl mx-auto"
-        >
-          <motion.header
-            initial={{ y: -50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <h1 className="text-5xl font-bold text-foreground mb-3">Your Personalized Diet Plan</h1>
-            <p className="text-muted-foreground text-lg">Tailored to your goals and budget</p>
-          </motion.header>
-
-          <motion.div
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12"
-          >
-            {[
-              {
-                label: "BMI",
-                value: results.bmi,
-                icon: Calculator,
-                unit: "",
-              },
-              {
-                label: "BMR",
-                value: results.bmr,
-                icon: Activity,
-                unit: "cal",
-              },
-              {
-                label: "Target Calories",
-                value: results.targetCalories,
-                icon: Utensils,
-                unit: "cal",
-              },
-              {
-                label: "Your Budget",
-                value: `₹${formData.budget}`,
-                icon: DollarSign,
-                unit: "",
-              },
-            ].map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.3, delay: 0.1 * index }}
-                className="bg-white/80 backdrop-blur-lg rounded-3xl p-6 shadow-2xl border-2 border-emerald-200"
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <stat.icon className="w-8 h-8 text-primary" />
-                </div>
-                <h3 className="text-muted-foreground text-sm font-medium mb-1">{stat.label}</h3>
-                <p className="text-3xl font-bold text-foreground">
-                  {stat.value}
-                  <span className="text-lg ml-1">{stat.unit}</span>
-                </p>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            {Object.entries(results.mealPlan).map(([mealType, food], index) => (
-              <motion.div
-                key={mealType}
-                initial={{ x: -50, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ duration: 0.4, delay: 0.1 * index }}
-                className="bg-white/80 backdrop-blur-lg rounded-2xl p-6 shadow-lg border-2 border-emerald-200"
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-2xl font-bold capitalize text-foreground">{mealType}</h3>
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                      food.type === "veg"
-                        ? "bg-emerald-100 text-emerald-700"
-                        : "bg-amber-100 text-amber-700"
-                    }`}
-                  >
-                    {food.type === "veg" ? "🥗 Veg" : "🍗 Non-Veg"}
-                  </span>
-                </div>
-                <h4 className="text-xl font-semibold text-foreground mb-3">{food.name}</h4>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-4">
-                    <span className="text-muted-foreground">
-                      <span className="font-semibold text-foreground">{food.calories}</span> cal
-                    </span>
-                    <span className="text-muted-foreground">
-                      <span className="font-semibold text-foreground">₹{food.price}</span>
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 1.2 }}
-            className="bg-white/80 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border-2 border-emerald-200 mb-8"
-          >
-            <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Daily Summary</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <p className="text-muted-foreground mb-2">Total Calories</p>
-                <p className="text-4xl font-bold text-foreground">{results.totalCalories}</p>
-                <p className="text-sm text-muted-foreground mt-1">Target: {results.targetCalories} cal</p>
-              </div>
-              <div className="text-center">
-                <p className="text-muted-foreground mb-2">Total Cost</p>
-                <p className="text-4xl font-bold text-foreground">₹{results.totalCost}</p>
-                <p className="text-sm text-muted-foreground mt-1">Budget: ₹{formData.budget}</p>
-              </div>
-              <div className="text-center">
-                <p className="text-muted-foreground mb-2">Budget Status</p>
-                <p
-                  className={`text-4xl font-bold ${
-                    results.totalCost <= formData.budget ? "text-emerald-600" : "text-amber-600"
-                  }`}
-                >
-                  {results.totalCost <= formData.budget ? "✅" : "⚠️"}
-                </p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {results.totalCost <= formData.budget
-                    ? "Within Budget"
-                    : `₹${results.totalCost - formData.budget} over`}
-                </p>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 1.4 }}
-            className="text-center"
-          >
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={handleReset}
-              className="bg-gradient-button text-white px-12 py-4 rounded-2xl text-lg font-semibold shadow-xl hover:shadow-2xl transition-all"
-            >
-              Create New Plan
-            </motion.button>
-          </motion.div>
-        </motion.div>
-      </div>
-    );
-  }
-
+  // Main render
   return (
     <div className="min-h-screen bg-gradient-main px-4 py-8">
       <motion.div
@@ -493,163 +464,340 @@ const Index = () => {
         transition={{ duration: 0.8 }}
         className="max-w-6xl mx-auto"
       >
-        <motion.header
-          initial={{ y: -50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <h1 className="text-5xl font-bold text-foreground mb-3">Indian Diet Planner</h1>
-          <p className="text-muted-foreground text-lg">
-            Get your personalized meal plan based on your goals and budget
-          </p>
-        </motion.header>
+        {showResults && results ? (
+          <>
+            <motion.header
+              initial={{ y: -50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <h1 className="text-5xl font-bold text-foreground mb-3">Your Personalized Diet Plan</h1>
+              <p className="text-muted-foreground text-lg">Tailored to your goals and budget</p>
+            </motion.header>
+            <motion.div
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12"
+            >
+              {[
+                { label: "BMI", value: results.bmi, icon: Calculator, unit: "" },
+                { label: "BMR", value: results.bmr, icon: Activity, unit: "cal" },
+                { label: "Target Calories", value: results.targetCalories, icon: Utensils, unit: "cal" },
+                { label: "Your Budget", value: `₹${formData.budget}`, icon: DollarSign, unit: "" },
+              ].map((stat, index) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.3, delay: 0.1 * index }}
+                  className="bg-white/80 backdrop-blur-lg rounded-3xl p-6 shadow-2xl border-2 border-emerald-200"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <stat.icon className="w-8 h-8 text-primary" />
+                  </div>
+                  <h3 className="text-muted-foreground text-sm font-medium mb-1">{stat.label}</h3>
+                  <p className="text-3xl font-bold text-foreground">
+                    {stat.value}
+                    <span className="text-lg ml-1">{stat.unit}</span>
+                  </p>
+                </motion.div>
+              ))}
+            </motion.div>
 
-        <motion.div
-          initial={{ scale: 0.95, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-white/80 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border-2 border-emerald-200"
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div>
-              <label className="block text-foreground font-semibold mb-2">Age</label>
-              <input
-                type="number"
-                min="15"
-                max="100"
-                value={formData.age || ""}
-                onChange={(e) => updateFormData("age", parseInt(e.target.value) || 0)}
-                className="w-full px-4 py-3 rounded-xl border-2 border-input focus:border-primary focus:outline-none transition-colors bg-white"
-                placeholder="Enter age (15-100)"
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              {Object.entries(results.mealPlan).map(([mealType, food], index) => {
+                const typedFood = food as FoodItem;
+                return (
+                  <motion.div
+                    key={mealType}
+                    initial={{ x: -50, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.4, delay: 0.1 * index }}
+                    className="bg-white/80 backdrop-blur-lg rounded-2xl p-6 shadow-lg border-2 border-emerald-200"
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-2xl font-bold capitalize text-foreground">{mealType}</h3>
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                          typedFood.type === "veg"
+                            ? "bg-emerald-100 text-emerald-700"
+                            : "bg-amber-100 text-amber-700"
+                        }`}
+                      >
+                        {typedFood.type === "veg" ? "🌱 Veg" : "🍗 Non-Veg"}
+                      </span>
+                    </div>
+                    <h4 className="text-xl font-semibold text-foreground mb-3">{typedFood.name}</h4>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      <span className="font-semibold text-foreground">Quantity:</span> {typedFood.quantity}
+                    </p>
+                    <div className="grid grid-cols-2 gap-3 mb-3">
+                      <div className="flex flex-col">
+                        <span className="text-xs text-muted-foreground">Protein</span>
+                        <span className="text-lg font-bold text-foreground">{typedFood.protein}g</span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-xs text-muted-foreground">Carbs</span>
+                        <span className="text-lg font-bold text-foreground">{typedFood.carbs}g</span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-xs text-muted-foreground">Fats</span>
+                        <span className="text-lg font-bold text-foreground">{typedFood.fats}g</span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-xs text-muted-foreground">Fiber</span>
+                        <span className="text-lg font-bold text-foreground">{typedFood.fiber}g</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-4">
+                        <span className="text-muted-foreground">
+                          <span className="font-semibold text-foreground">{typedFood.calories}</span> cal
+                        </span>
+                        <span className="text-muted-foreground">
+                          <span className="font-semibold text-foreground">₹{typedFood.price}</span>
+                        </span>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
 
-            <div>
-              <label className="block text-foreground font-semibold mb-2">Sex</label>
-              <div className="grid grid-cols-2 gap-3">
-                {["male", "female"].map((sex) => (
-                  <button
-                    key={sex}
-                    onClick={() => updateFormData("sex", sex)}
-                    className={`px-4 py-3 rounded-xl font-semibold transition-all ${
-                      formData.sex === sex
-                        ? "bg-gradient-button text-white shadow-lg"
-                        : "bg-muted text-foreground hover:bg-muted/80"
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 1.2 }}
+              className="bg-white/80 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border-2 border-emerald-200 mb-8"
+            >
+              <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Daily Nutritional Summary</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div className="text-center">
+                  <p className="text-muted-foreground mb-2">Total Calories</p>
+                  <p className="text-4xl font-bold text-foreground">{results.totalCalories}</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Target: {results.targetCalories} cal
+                  </p>
+                </div>
+                <div className="text-center">
+                  <p className="text-muted-foreground mb-2">Total Protein</p>
+                  <p className="text-4xl font-bold text-blue-600">{results.totalProtein}g</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Recommended: 50-60g
+                  </p>
+                </div>
+                <div className="text-center">
+                  <p className="text-muted-foreground mb-2">Total Carbs</p>
+                  <p className="text-4xl font-bold text-amber-600">{results.totalCarbs}g</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Recommended: 200-300g
+                  </p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="text-center">
+                  <p className="text-muted-foreground mb-2">Total Fats</p>
+                  <p className="text-4xl font-bold text-orange-600">{results.totalFats}g</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Recommended: 50-70g
+                  </p>
+                </div>
+                <div className="text-center">
+                  <p className="text-muted-foreground mb-2">Total Fiber</p>
+                  <p className="text-4xl font-bold text-green-600">{results.totalFiber}g</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Recommended: 25-35g
+                  </p>
+                </div>
+                <div className="text-center">
+                  <p className="text-muted-foreground mb-2">Total Cost</p>
+                  <p className="text-4xl font-bold text-foreground">₹{results.totalCost}</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Budget: ₹{formData.budget}
+                  </p>
+                </div>
+              </div>
+              <div className="mt-6 pt-6 border-t border-emerald-200">
+                <div className="text-center">
+                  <p
+                    className={`text-2xl font-bold ${
+                      results.totalCost <= formData.budget ? "text-emerald-600" : "text-amber-600"
                     }`}
                   >
-                    {sex === "male" ? "Male" : "Female"}
-                  </button>
-                ))}
+                    {results.totalCost <= formData.budget
+                      ? "✓ Budget Status: Within Budget"
+                      : `⚠ Budget Status: ₹${results.totalCost - formData.budget} over`}
+                  </p>
+                </div>
               </div>
-            </div>
+            </motion.div>
 
-            <div>
-              <label className="block text-foreground font-semibold mb-2">Weight (kg)</label>
-              <input
-                type="number"
-                step="0.1"
-                min="30"
-                max="200"
-                value={formData.weight || ""}
-                onChange={(e) => updateFormData("weight", parseFloat(e.target.value) || 0)}
-                className="w-full px-4 py-3 rounded-xl border-2 border-input focus:border-primary focus:outline-none transition-colors bg-white"
-                placeholder="Enter weight (30-200 kg)"
-              />
-            </div>
-
-            <div>
-              <label className="block text-foreground font-semibold mb-2">Height (cm)</label>
-              <input
-                type="number"
-                min="120"
-                max="250"
-                value={formData.height || ""}
-                onChange={(e) => updateFormData("height", parseInt(e.target.value) || 0)}
-                className="w-full px-4 py-3 rounded-xl border-2 border-input focus:border-primary focus:outline-none transition-colors bg-white"
-                placeholder="Enter height (120-250 cm)"
-              />
-            </div>
-
-            <div>
-              <label className="block text-foreground font-semibold mb-2">Activity Level</label>
-              <select
-                value={formData.activityLevel}
-                onChange={(e) => updateFormData("activityLevel", e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border-2 border-input focus:border-primary focus:outline-none transition-colors bg-white"
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 1.4 }}
+              className="text-center"
+            >
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleReset}
+                className="bg-gradient-button text-white px-12 py-4 rounded-2xl text-lg font-semibold shadow-xl hover:shadow-2xl transition-all"
               >
-                <option value="">Select activity level</option>
-                <option value="sedentary">Sedentary</option>
-                <option value="light">Light</option>
-                <option value="moderate">Moderate</option>
-                <option value="active">Active</option>
-                <option value="veryActive">Very Active</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-foreground font-semibold mb-2">Goal</label>
-              <select
-                value={formData.goal}
-                onChange={(e) => updateFormData("goal", e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border-2 border-input focus:border-primary focus:outline-none transition-colors bg-white"
-              >
-                <option value="">Select goal</option>
-                <option value="lose">Lose Weight</option>
-                <option value="maintain">Maintain Weight</option>
-                <option value="gain">Gain Weight</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-foreground font-semibold mb-2">Diet Preference</label>
-              <div className="grid grid-cols-3 gap-3">
-                {[
-                  { value: "veg", label: "Veg" },
-                  { value: "nonveg", label: "Non-Veg" },
-                  { value: "both", label: "Both" },
-                ].map((pref) => (
-                  <button
-                    key={pref.value}
-                    onClick={() => updateFormData("dietPreference", pref.value)}
-                    className={`px-4 py-3 rounded-xl font-semibold transition-all ${
-                      formData.dietPreference === pref.value
-                        ? "bg-gradient-button text-white shadow-lg"
-                        : "bg-muted text-foreground hover:bg-muted/80"
-                    }`}
-                  >
-                    {pref.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-foreground font-semibold mb-2">Daily Budget (₹)</label>
-              <input
-                type="number"
-                min="100"
-                max="5000"
-                value={formData.budget || ""}
-                onChange={(e) => updateFormData("budget", parseInt(e.target.value) || 0)}
-                className="w-full px-4 py-3 rounded-xl border-2 border-input focus:border-primary focus:outline-none transition-colors bg-white"
-                placeholder="Enter budget (₹100-5000)"
-              />
-            </div>
-          </div>
-
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={handleSubmit}
-            className="w-full bg-gradient-button text-white py-4 rounded-2xl text-lg font-semibold shadow-xl hover:shadow-2xl transition-all"
+                Create New Plan
+              </motion.button>
+            </motion.div>
+          </>
+        ) : (
+          <motion.div
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="bg-white/80 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border-2 border-emerald-200"
           >
-            Generate My Diet Plan
-          </motion.button>
-        </motion.div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              <div>
+                <label className="block text-foreground font-semibold mb-2">Age</label>
+                <input
+                  type="number"
+                  min="15"
+                  max="100"
+                  value={formData.age || ""}
+                  onChange={(e) => updateFormData("age", parseInt(e.target.value) || 0)}
+                  className="w-full px-4 py-3 rounded-xl border-2 border-input focus:border-primary focus:outline-none transition-colors bg-white"
+                  placeholder="Enter age (15-100)"
+                />
+              </div>
+
+              <div>
+                <label className="block text-foreground font-semibold mb-2">Sex</label>
+                <div className="grid grid-cols-2 gap-3">
+                  {["male", "female"].map((sex) => (
+                    <button
+                      key={sex}
+                      onClick={() => updateFormData("sex", sex as FormData["sex"])}
+                      className={`px-4 py-3 rounded-xl font-semibold transition-all ${
+                        formData.sex === sex
+                          ? "bg-gradient-button text-white shadow-lg"
+                          : "bg-muted text-foreground hover:bg-muted/80"
+                      }`}
+                    >
+                      {sex === "male" ? "Male" : "Female"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-foreground font-semibold mb-2">Weight (kg)</label>
+                <input
+                  type="number"
+                  step="0.1"
+                  min="30"
+                  max="200"
+                  value={formData.weight || ""}
+                  onChange={(e) => updateFormData("weight", parseFloat(e.target.value) || 0)}
+                  className="w-full px-4 py-3 rounded-xl border-2 border-input focus:border-primary focus:outline-none transition-colors bg-white"
+                  placeholder="Enter weight (30-200 kg)"
+                />
+              </div>
+
+              <div>
+                <label className="block text-foreground font-semibold mb-2">Height (cm)</label>
+                <input
+                  type="number"
+                  min="120"
+                  max="250"
+                  value={formData.height || ""}
+                  onChange={(e) => updateFormData("height", parseInt(e.target.value) || 0)}
+                  className="w-full px-4 py-3 rounded-xl border-2 border-input focus:border-primary focus:outline-none transition-colors bg-white"
+                  placeholder="Enter height (120-250 cm)"
+                />
+              </div>
+
+              <div>
+                <label className="block text-foreground font-semibold mb-2">Activity Level</label>
+                <select
+                  value={formData.activityLevel}
+                  onChange={(e) => updateFormData("activityLevel", e.target.value as FormData["activityLevel"])}
+                  className="w-full px-4 py-3 rounded-xl border-2 border-input focus:border-primary focus:outline-none transition-colors bg-white"
+                >
+                  <option value="">Select activity level</option>
+                  <option value="sedentary">Sedentary</option>
+                  <option value="light">Light</option>
+                  <option value="moderate">Moderate</option>
+                  <option value="active">Active</option>
+                  <option value="veryActive">Very Active</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-foreground font-semibold mb-2">Goal</label>
+                <select
+                  value={formData.goal}
+                  onChange={(e) => updateFormData("goal", e.target.value as FormData["goal"])}
+                  className="w-full px-4 py-3 rounded-xl border-2 border-input focus:border-primary focus:outline-none transition-colors bg-white"
+                >
+                  <option value="">Select goal</option>
+                  <option value="lose">Lose Weight</option>
+                  <option value="maintain">Maintain Weight</option>
+                  <option value="gain">Gain Weight</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-foreground font-semibold mb-2">Diet Preference</label>
+                <div className="grid grid-cols-3 gap-3">
+                  {[
+                    { value: "veg", label: "Veg" },
+                    { value: "nonveg", label: "Non-Veg" },
+                    { value: "both", label: "Both" },
+                  ].map((pref) => (
+                    <button
+                      key={pref.value}
+                      onClick={() => updateFormData("dietPreference", pref.value as FormData["dietPreference"])}
+                      className={`px-4 py-3 rounded-xl font-semibold transition-all ${
+                        formData.dietPreference === pref.value
+                          ? "bg-gradient-button text-white shadow-lg"
+                          : "bg-muted text-foreground hover:bg-muted/80"
+                      }`}
+                    >
+                      {pref.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-foreground font-semibold mb-2">Daily Budget (₹)</label>
+                <input
+                  type="number"
+                  min="100"
+                  max="5000"
+                  value={formData.budget || ""}
+                  onChange={(e) => updateFormData("budget", parseInt(e.target.value) || 0)}
+                  className="w-full px-4 py-3 rounded-xl border-2 border-input focus:border-primary focus:outline-none transition-colors bg-white"
+                  placeholder="Enter budget (₹100-5000)"
+                />
+              </div>
+            </div>
+
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={handleSubmit}
+              className="w-full bg-gradient-button text-white py-4 rounded-2xl text-lg font-semibold shadow-xl hover:shadow-2xl transition-all"
+            >
+              Generate My Diet Plan
+            </motion.button>
+          </motion.div>
+        )}
       </motion.div>
     </div>
   );
 };
 
 export default Index;
+
