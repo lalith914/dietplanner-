@@ -458,6 +458,10 @@ const FOOD_DATABASE = {
   // Main render
   return (
     <div className="min-h-screen bg-gradient-main px-4 py-8">
+      <div className="text-center mb-10">
+        <h1 className="text-6xl font-bold text-foreground mb-4">Indian Diet Planner</h1>
+        <p className="text-2xl text-muted-foreground">Get your personalized meal plan based on your goals and budget</p>
+      </div>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
