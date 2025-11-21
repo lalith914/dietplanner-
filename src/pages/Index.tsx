@@ -501,9 +501,6 @@ const FOOD_DATABASE = {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-start py-8 px-2 md:px-0">
-      <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-6 text-center drop-shadow-lg tracking-tight">
-        INDIAN DIET PLANNER
-      </h1>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
