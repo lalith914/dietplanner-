@@ -1,21 +1,15 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Calculator, Utensils, Activity, DollarSign } from "lucide-react";
 
-interface FormData {
-  age: number;
-  sex: "male" | "female" | "";
-  weight: number;
-  height: number;
-  activityLevel: "sedentary" | "light" | "moderate" | "active" | "veryActive" | "";
-  goal: "lose" | "maintain" | "gain" | "";
-  dietPreference: "veg" | "nonveg" | "both" | "";
-  budget: number;
-}
-
 interface FoodItem {
   name: string;
+  quantity: string;
   calories: number;
+  protein: number;
+  carbs: number;
+  fats: number;
+  fiber: number;
   price: number;
   type: "veg" | "nonveg";
 }
@@ -28,73 +22,88 @@ interface MealPlan {
   drink: FoodItem;
 }
 
+interface FormData {
+  age: number;
+  sex: "male" | "female" | "";
+  weight: number;
+  height: number;
+  activityLevel: "sedentary" | "light" | "moderate" | "active" | "veryActive" | "";
+  goal: "lose" | "maintain" | "gain" | "";
+  dietPreference: "veg" | "nonveg" | "both" | "";
+  budget: number;
+}
+
 interface Results {
   bmi: number;
   bmr: number;
   targetCalories: number;
   mealPlan: MealPlan;
   totalCalories: number;
+  totalProtein: number;
+  totalCarbs: number;
+  totalFats: number;
+  totalFiber: number;
   totalCost: number;
 }
 
 const FOOD_DATABASE = {
   breakfast: [
-    { name: "Poha", calories: 250, price: 25, type: "veg" as const },
-    { name: "Upma", calories: 200, price: 20, type: "veg" as const },
-    { name: "Idli (3 pcs)", calories: 180, price: 30, type: "veg" as const },
-    { name: "Dosa", calories: 220, price: 35, type: "veg" as const },
-    { name: "Paratha with Curd", calories: 320, price: 40, type: "veg" as const },
-    { name: "Aloo Paratha", calories: 350, price: 45, type: "veg" as const },
-    { name: "Bread Omelette", calories: 280, price: 30, type: "nonveg" as const },
-    { name: "Egg Bhurji", calories: 240, price: 35, type: "nonveg" as const },
-    { name: "Masala Oats", calories: 180, price: 25, type: "veg" as const },
-    { name: "Vermicelli Upma", calories: 210, price: 22, type: "veg" as const },
+    { name: "Poha", quantity: "1 plate (150g)", calories: 250, protein: 5, carbs: 45, fats: 4, fiber: 3, price: 25, type: "veg" as const },
+    { name: "Upma", quantity: "1 bowl (150g)", calories: 200, protein: 6, carbs: 40, fats: 3, fiber: 2, price: 20, type: "veg" as const },
+    { name: "Idli (3 pcs)", quantity: "3 pcs (180g)", calories: 180, protein: 6, carbs: 38, fats: 1, fiber: 2, price: 30, type: "veg" as const },
+    { name: "Dosa", quantity: "1 large (120g)", calories: 220, protein: 5, carbs: 35, fats: 6, fiber: 2, price: 35, type: "veg" as const },
+    { name: "Paratha with Curd", quantity: "1 paratha + 100g curd", calories: 320, protein: 9, carbs: 48, fats: 10, fiber: 3, price: 40, type: "veg" as const },
+    { name: "Aloo Paratha", quantity: "1 paratha (120g)", calories: 350, protein: 7, carbs: 55, fats: 11, fiber: 4, price: 45, type: "veg" as const },
+    { name: "Bread Omelette", quantity: "2 bread + 2 eggs", calories: 280, protein: 13, carbs: 28, fats: 12, fiber: 2, price: 30, type: "nonveg" as const },
+    { name: "Egg Bhurji", quantity: "2 eggs (100g)", calories: 240, protein: 12, carbs: 6, fats: 18, fiber: 1, price: 35, type: "nonveg" as const },
+    { name: "Masala Oats", quantity: "1 bowl (40g)", calories: 180, protein: 6, carbs: 30, fats: 3, fiber: 4, price: 25, type: "veg" as const },
+    { name: "Vermicelli Upma", quantity: "1 bowl (150g)", calories: 210, protein: 5, carbs: 38, fats: 4, fiber: 2, price: 22, type: "veg" as const },
   ],
   lunch: [
-    { name: "Dal Rice", calories: 350, price: 50, type: "veg" as const },
-    { name: "Rajma Rice", calories: 420, price: 60, type: "veg" as const },
-    { name: "Chole Rice", calories: 450, price: 65, type: "veg" as const },
-    { name: "Veg Pulao", calories: 380, price: 55, type: "veg" as const },
-    { name: "Roti with Dal and Sabzi", calories: 400, price: 60, type: "veg" as const },
-    { name: "Paneer Sabzi with Roti", calories: 480, price: 90, type: "veg" as const },
-    { name: "Chicken Curry with Rice", calories: 550, price: 120, type: "nonveg" as const },
-    { name: "Egg Curry with Rice", calories: 450, price: 70, type: "nonveg" as const },
-    { name: "Fish Curry with Rice", calories: 500, price: 150, type: "nonveg" as const },
-    { name: "Sambar Rice", calories: 370, price: 55, type: "veg" as const },
+    { name: "Dal Rice", quantity: "1 cup dal + 1 cup rice", calories: 350, protein: 12, carbs: 65, fats: 4, fiber: 5, price: 50, type: "veg" as const },
+    { name: "Rajma Rice", quantity: "1 cup rajma + 1 cup rice", calories: 420, protein: 14, carbs: 75, fats: 6, fiber: 7, price: 60, type: "veg" as const },
+    { name: "Chole Rice", quantity: "1 cup chole + 1 cup rice", calories: 450, protein: 15, carbs: 78, fats: 7, fiber: 8, price: 65, type: "veg" as const },
+    { name: "Veg Pulao", quantity: "1 bowl (200g)", calories: 380, protein: 8, carbs: 70, fats: 7, fiber: 4, price: 55, type: "veg" as const },
+    { name: "Roti with Dal and Sabzi", quantity: "2 roti + 1 cup dal + 1 cup sabzi", calories: 400, protein: 13, carbs: 68, fats: 5, fiber: 7, price: 60, type: "veg" as const },
+    { name: "Paneer Sabzi with Roti", quantity: "2 roti + 1 cup paneer sabzi", calories: 480, protein: 18, carbs: 55, fats: 16, fiber: 5, price: 90, type: "veg" as const },
+    { name: "Chicken Curry with Rice", quantity: "1 cup curry + 1 cup rice", calories: 550, protein: 28, carbs: 70, fats: 18, fiber: 3, price: 120, type: "nonveg" as const },
+    { name: "Egg Curry with Rice", quantity: "2 eggs + 1 cup rice", calories: 450, protein: 20, carbs: 65, fats: 12, fiber: 2, price: 70, type: "nonveg" as const },
+    { name: "Fish Curry with Rice", quantity: "1 cup curry + 1 cup rice", calories: 500, protein: 25, carbs: 68, fats: 15, fiber: 2, price: 150, type: "nonveg" as const },
+    { name: "Sambar Rice", quantity: "1 bowl (200g)", calories: 370, protein: 8, carbs: 72, fats: 3, fiber: 5, price: 55, type: "veg" as const },
   ],
   dinner: [
-    { name: "Khichdi", calories: 300, price: 40, type: "veg" as const },
-    { name: "Dal Roti", calories: 350, price: 50, type: "veg" as const },
-    { name: "Veg Biryani", calories: 420, price: 80, type: "veg" as const },
-    { name: "Palak Paneer with Roti", calories: 450, price: 95, type: "veg" as const },
-    { name: "Sabzi Roti", calories: 320, price: 55, type: "veg" as const },
-    { name: "Grilled Chicken with Roti", calories: 480, price: 130, type: "nonveg" as const },
-    { name: "Egg Fried Rice", calories: 400, price: 75, type: "nonveg" as const },
-    { name: "Mixed Dal with Rice", calories: 360, price: 50, type: "veg" as const },
-    { name: "Paneer Tikka with Roti", calories: 500, price: 110, type: "veg" as const },
-    { name: "Butter Chicken with Naan", calories: 580, price: 150, type: "nonveg" as const },
+    { name: "Khichdi", quantity: "1 bowl (200g)", calories: 300, protein: 9, carbs: 55, fats: 5, fiber: 4, price: 40, type: "veg" as const },
+    { name: "Dal Roti", quantity: "2 roti + 1 cup dal", calories: 350, protein: 12, carbs: 60, fats: 4, fiber: 5, price: 50, type: "veg" as const },
+    { name: "Veg Biryani", quantity: "1 bowl (200g)", calories: 420, protein: 9, carbs: 75, fats: 8, fiber: 4, price: 80, type: "veg" as const },
+    { name: "Palak Paneer with Roti", quantity: "2 roti + 1 cup palak paneer", calories: 450, protein: 17, carbs: 52, fats: 15, fiber: 5, price: 95, type: "veg" as const },
+    { name: "Sabzi Roti", quantity: "2 roti + 1 cup sabzi", calories: 320, protein: 8, carbs: 58, fats: 3, fiber: 5, price: 55, type: "veg" as const },
+    { name: "Grilled Chicken with Roti", quantity: "2 roti + 100g chicken", calories: 480, protein: 30, carbs: 52, fats: 14, fiber: 3, price: 130, type: "nonveg" as const },
+    { name: "Egg Fried Rice", quantity: "1 bowl (200g)", calories: 400, protein: 14, carbs: 68, fats: 10, fiber: 3, price: 75, type: "nonveg" as const },
+    { name: "Mixed Dal with Rice", quantity: "1 cup dal + 1 cup rice", calories: 360, protein: 13, carbs: 65, fats: 4, fiber: 6, price: 50, type: "veg" as const },
+    { name: "Paneer Tikka with Roti", quantity: "2 roti + 1 cup paneer tikka", calories: 500, protein: 20, carbs: 54, fats: 18, fiber: 4, price: 110, type: "veg" as const },
+    { name: "Butter Chicken with Naan", quantity: "1 naan + 1 cup butter chicken", calories: 580, protein: 32, carbs: 60, fats: 22, fiber: 3, price: 150, type: "nonveg" as const },
   ],
   snack: [
-    { name: "Samosa (2 pcs)", calories: 260, price: 20, type: "veg" as const },
-    { name: "Banana", calories: 105, price: 10, type: "veg" as const },
-    { name: "Apple", calories: 95, price: 30, type: "veg" as const },
-    { name: "Roasted Chana", calories: 150, price: 15, type: "veg" as const },
-    { name: "Biscuits (4 pcs)", calories: 200, price: 20, type: "veg" as const },
-    { name: "Pakora", calories: 180, price: 25, type: "veg" as const },
-    { name: "Boiled Egg", calories: 155, price: 12, type: "nonveg" as const },
-    { name: "Mixed Nuts", calories: 170, price: 40, type: "veg" as const },
-    { name: "Fruit Chaat", calories: 120, price: 35, type: "veg" as const },
-    { name: "Peanuts", calories: 160, price: 15, type: "veg" as const },
+    { name: "Samosa (2 pcs)", quantity: "2 pcs (100g)", calories: 260, protein: 5, carbs: 32, fats: 12, fiber: 2, price: 20, type: "veg" as const },
+    { name: "Banana", quantity: "1 medium (120g)", calories: 105, protein: 1, carbs: 27, fats: 0, fiber: 3, price: 10, type: "veg" as const },
+    { name: "Apple", quantity: "1 medium (180g)", calories: 95, protein: 0, carbs: 25, fats: 0, fiber: 4, price: 30, type: "veg" as const },
+    { name: "Roasted Chana", quantity: "60g", calories: 150, protein: 8, carbs: 18, fats: 6, fiber: 3, price: 15, type: "veg" as const },
+    { name: "Biscuits (4 pcs)", quantity: "4 pcs (100g)", calories: 200, protein: 3, carbs: 28, fats: 8, fiber: 1, price: 20, type: "veg" as const },
+    { name: "Pakora", quantity: "5 pcs (100g)", calories: 180, protein: 4, carbs: 22, fats: 10, fiber: 1, price: 25, type: "veg" as const },
+    { name: "Boiled Egg", quantity: "1 piece (50g)", calories: 155, protein: 13, carbs: 1, fats: 11, fiber: 0, price: 12, type: "nonveg" as const },
+    { name: "Mixed Nuts", quantity: "40g", calories: 170, protein: 8, carbs: 10, fats: 18, fiber: 2, price: 40, type: "veg" as const },
+    { name: "Fruit Chaat", quantity: "1 cup (150g)", calories: 120, protein: 1, carbs: 28, fats: 1, fiber: 4, price: 35, type: "veg" as const },
+    { name: "Peanuts", quantity: "50g", calories: 160, protein: 9, carbs: 8, fats: 22, fiber: 3, price: 15, type: "veg" as const },
   ],
   drink: [
-    { name: "Chai", calories: 80, price: 10, type: "veg" as const },
-    { name: "Coffee", calories: 60, price: 15, type: "veg" as const },
-    { name: "Lassi", calories: 150, price: 30, type: "veg" as const },
-    { name: "Buttermilk", calories: 60, price: 15, type: "veg" as const },
-    { name: "Lemon Water", calories: 10, price: 5, type: "veg" as const },
-    { name: "Coconut Water", calories: 45, price: 30, type: "veg" as const },
-    { name: "Nimbu Pani", calories: 40, price: 10, type: "veg" as const },
-    { name: "Milk", calories: 150, price: 20, type: "veg" as const },
+    { name: "Chai", quantity: "1 cup (200ml)", calories: 80, protein: 2, carbs: 12, fats: 2, fiber: 0, price: 10, type: "veg" as const },
+    { name: "Coffee", quantity: "1 cup (200ml)", calories: 60, protein: 1, carbs: 6, fats: 1, fiber: 0, price: 15, type: "veg" as const },
+    { name: "Lassi", quantity: "1 cup (200ml)", calories: 150, protein: 6, carbs: 18, fats: 3, fiber: 0, price: 30, type: "veg" as const },
+    { name: "Buttermilk", quantity: "1 cup (200ml)", calories: 60, protein: 3, carbs: 4, fats: 1, fiber: 0, price: 15, type: "veg" as const },
+    { name: "Lemon Water", quantity: "1 glass (200ml)", calories: 10, protein: 0, carbs: 2, fats: 0, fiber: 0, price: 5, type: "veg" as const },
+    { name: "Coconut Water", quantity: "1 glass (200ml)", calories: 45, protein: 1, carbs: 9, fats: 0, fiber: 0, price: 30, type: "veg" as const },
+    { name: "Nimbu Pani", quantity: "1 glass (200ml)", calories: 40, protein: 0, carbs: 10, fats: 0, fiber: 0, price: 10, type: "veg" as const },
+    { name: "Milk", quantity: "1 cup (200ml)", calories: 150, protein: 8, carbs: 12, fats: 8, fiber: 0, price: 20, type: "veg" as const },
   ],
 };
 
@@ -230,6 +239,34 @@ const Index = () => {
       mealPlan.snack.calories +
       mealPlan.drink.calories;
 
+    const totalProtein =
+      mealPlan.breakfast.protein +
+      mealPlan.lunch.protein +
+      mealPlan.dinner.protein +
+      mealPlan.snack.protein +
+      mealPlan.drink.protein;
+
+    const totalCarbs =
+      mealPlan.breakfast.carbs +
+      mealPlan.lunch.carbs +
+      mealPlan.dinner.carbs +
+      mealPlan.snack.carbs +
+      mealPlan.drink.carbs;
+
+    const totalFats =
+      mealPlan.breakfast.fats +
+      mealPlan.lunch.fats +
+      mealPlan.dinner.fats +
+      mealPlan.snack.fats +
+      mealPlan.drink.fats;
+
+    const totalFiber =
+      mealPlan.breakfast.fiber +
+      mealPlan.lunch.fiber +
+      mealPlan.dinner.fiber +
+      mealPlan.snack.fiber +
+      mealPlan.drink.fiber;
+
     const totalCost =
       mealPlan.breakfast.price +
       mealPlan.lunch.price +
@@ -243,6 +280,10 @@ const Index = () => {
       targetCalories: Math.round(targetCalories),
       mealPlan,
       totalCalories,
+      totalProtein,
+      totalCarbs,
+      totalFats,
+      totalFiber,
       totalCost,
     };
   };
