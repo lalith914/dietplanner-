@@ -132,6 +132,14 @@ const FOOD_DATABASE = {
     { name: "Steamed Rava Idli with Veg", quantity: "3 pieces (140g)", calories: 190, protein: 7, carbs: 38, fats: 2, fiber: 3, price: 32, type: "veg" as const },
     { name: "Oats Poha with Vegetables", quantity: "1 cup (180g)", calories: 200, protein: 8, carbs: 36, fats: 4, fiber: 6, price: 30, type: "veg" as const },
 
+    // Added healthy options
+    { name: "Vegetable Dalia", quantity: "1 bowl (200g)", calories: 180, protein: 6, carbs: 32, fats: 2, fiber: 5, price: 22, type: "veg" as const },
+    { name: "Paneer Bhurji with Multigrain Toast", quantity: "1 plate (180g)", calories: 260, protein: 16, carbs: 22, fats: 12, fiber: 4, price: 55, type: "veg" as const },
+    { name: "Chickpea Pancake (Besan Chilla)", quantity: "2 pieces (160g)", calories: 210, protein: 10, carbs: 28, fats: 6, fiber: 6, price: 25, type: "veg" as const },
+    { name: "Egg & Spinach Sandwich", quantity: "2 slices + 2 eggs", calories: 250, protein: 16, carbs: 28, fats: 8, fiber: 5, price: 40, type: "nonveg" as const },
+    { name: "Chicken Sausage & Veggie Scramble", quantity: "1 plate (180g)", calories: 280, protein: 18, carbs: 12, fats: 16, fiber: 3, price: 60, type: "nonveg" as const },
+    { name: "Sprouted Moong Salad Bowl", quantity: "1 bowl (180g)", calories: 160, protein: 10, carbs: 28, fats: 2, fiber: 7, price: 30, type: "veg" as const },
+
     // Vegetarian - Breads (healthier versions)
     { name: "Multigrain Paratha (1) + Curd", quantity: "1 piece (120g) + 100g curd", calories: 260, protein: 10, carbs: 34, fats: 8, fiber: 6, price: 40, type: "veg" as const },
     { name: "Besan & Oats Chilla (2)", quantity: "2 pieces (160g)", calories: 220, protein: 14, carbs: 28, fats: 6, fiber: 6, price: 28, type: "veg" as const },
@@ -162,6 +170,14 @@ const FOOD_DATABASE = {
     { name: "Brown Rice with Toor Dal & Mixed Veg", quantity: "1 plate (300g)", calories: 420, protein: 15, carbs: 68, fats: 7, fiber: 8, price: 70, type: "veg" as const },
     { name: "Quinoa & Mixed Bean Bowl (Indian spices)", quantity: "1 plate (300g)", calories: 420, protein: 18, carbs: 52, fats: 9, fiber: 10, price: 110, type: "veg" as const },
     { name: "Sprouted Moong Salad + 1 Roti (multigrain)", quantity: "1 plate + 1 roti", calories: 360, protein: 18, carbs: 40, fats: 6, fiber: 12, price: 65, type: "veg" as const },
+
+    // Added healthy options
+    { name: "Palak Dal with Brown Rice", quantity: "1 plate (300g)", calories: 390, protein: 14, carbs: 62, fats: 6, fiber: 9, price: 60, type: "veg" as const },
+    { name: "Rajma Salad Bowl", quantity: "1 bowl (250g)", calories: 320, protein: 12, carbs: 48, fats: 4, fiber: 10, price: 45, type: "veg" as const },
+    { name: "Grilled Fish with Quinoa & Veggies", quantity: "1 plate (250g)", calories: 350, protein: 28, carbs: 30, fats: 10, fiber: 5, price: 180, type: "nonveg" as const },
+    { name: "Egg Curry with Brown Rice", quantity: "2 eggs + 150g rice", calories: 340, protein: 16, carbs: 48, fats: 8, fiber: 3, price: 60, type: "nonveg" as const },
+    { name: "Paneer Tikka Salad", quantity: "1 bowl (200g)", calories: 280, protein: 18, carbs: 18, fats: 14, fiber: 4, price: 70, type: "veg" as const },
+    { name: "Chicken & Vegetable Stew", quantity: "1 bowl (250g)", calories: 320, protein: 24, carbs: 18, fats: 10, fiber: 4, price: 90, type: "nonveg" as const },
 
     // Vegetarian - Lighter rice dishes
     { name: "Lemon Brown Rice with Roasted Veg", quantity: "1 plate (300g)", calories: 380, protein: 8, carbs: 64, fats: 6, fiber: 6, price: 60, type: "veg" as const },
@@ -199,6 +215,14 @@ const FOOD_DATABASE = {
     { name: "Mixed Dal Soup + Multigrain Toast", quantity: "1 bowl + 1 slice", calories: 300, protein: 18, carbs: 38, fats: 6, fiber: 8, price: 60, type: "veg" as const },
     { name: "Grilled Vegetable Platter + 1 Roti", quantity: "1 plate", calories: 320, protein: 8, carbs: 48, fats: 8, fiber: 10, price: 75, type: "veg" as const },
 
+    // Added healthy options
+    { name: "Vegetable Oats Soup", quantity: "1 bowl (250g)", calories: 180, protein: 7, carbs: 28, fats: 3, fiber: 6, price: 30, type: "veg" as const },
+    { name: "Grilled Paneer & Veggies", quantity: "1 plate (200g)", calories: 260, protein: 18, carbs: 16, fats: 12, fiber: 5, price: 70, type: "veg" as const },
+    { name: "Chicken Tikka with Salad", quantity: "1 plate (200g)", calories: 320, protein: 28, carbs: 8, fats: 12, fiber: 3, price: 90, type: "nonveg" as const },
+    { name: "Egg Bhurji with Spinach", quantity: "1 plate (180g)", calories: 220, protein: 16, carbs: 8, fats: 12, fiber: 3, price: 40, type: "nonveg" as const },
+    { name: "Soya Chunks Curry + Roti", quantity: "1 plate (200g)", calories: 300, protein: 22, carbs: 32, fats: 6, fiber: 7, price: 35, type: "veg" as const },
+    { name: "Fish Stew with Veggies", quantity: "1 bowl (200g)", calories: 240, protein: 20, carbs: 10, fats: 8, fiber: 2, price: 120, type: "nonveg" as const },
+
     // Vegetarian - Protein focused
     { name: "Moong Dal Cheela (3) + Mint Chutney", quantity: "3 pieces (240g)", calories: 330, protein: 20, carbs: 42, fats: 8, fiber: 8, price: 60, type: "veg" as const },
     { name: "Palak Paneer (light oil) + 2 Rotis (multigrain)", quantity: "1 plate", calories: 440, protein: 26, carbs: 44, fats: 16, fiber: 6, price: 120, type: "veg" as const },
@@ -230,6 +254,14 @@ const FOOD_DATABASE = {
     { name: "Baked Samosa (1) with Salad", quantity: "1 piece (80g)", calories: 160, protein: 4, carbs: 24, fats: 6, fiber: 3, price: 20, type: "veg" as const },
     { name: "Makhana (roasted, light seasoning)", quantity: "50g", calories: 70, protein: 3, carbs: 14, fats: 1, fiber: 2, price: 40, type: "veg" as const },
 
+    // Added healthy options
+    { name: "Carrot & Cucumber Sticks with Greek Yogurt Dip", quantity: "150g veg + 50g dip", calories: 110, protein: 6, carbs: 14, fats: 3, fiber: 4, price: 30, type: "veg" as const },
+    { name: "Boiled Soya Chunks", quantity: "50g", calories: 90, protein: 8, carbs: 7, fats: 1, fiber: 4, price: 15, type: "veg" as const },
+    { name: "Egg White Salad", quantity: "2 egg whites + veg", calories: 80, protein: 10, carbs: 4, fats: 1, fiber: 2, price: 20, type: "nonveg" as const },
+    { name: "Chicken Breast Slices (grilled)", quantity: "50g", calories: 90, protein: 16, carbs: 0, fats: 2, fiber: 0, price: 40, type: "nonveg" as const },
+    { name: "Fruit & Nut Energy Bar (homemade)", quantity: "1 bar (40g)", calories: 140, protein: 4, carbs: 22, fats: 5, fiber: 3, price: 25, type: "veg" as const },
+    { name: "Steamed Corn Chaat", quantity: "1 cup (100g)", calories: 120, protein: 4, carbs: 24, fats: 2, fiber: 3, price: 20, type: "veg" as const },
+
     // Vegetarian - Nuts, fruits
     { name: "Almonds (20g) + Walnuts (10g)", quantity: "30g", calories: 190, protein: 6, carbs: 4, fats: 16, fiber: 3, price: 45, type: "veg" as const },
     { name: "Apple + Peanut Butter (1 tbsp)", quantity: "1 apple + 15g PB", calories: 220, protein: 4, carbs: 32, fats: 9, fiber: 5, price: 50, type: "veg" as const },
@@ -258,6 +290,13 @@ const FOOD_DATABASE = {
     // Hot & low-calorie
     { name: "Green Tea - Lemon & Honey (no sugar)", quantity: "1 cup (200ml)", calories: 10, protein: 0, carbs: 2, fats: 0, fiber: 0, price: 15, type: "veg" as const },
     { name: "Herbal Tulsi Tea", quantity: "1 cup (200ml)", calories: 5, protein: 0, carbs: 1, fats: 0, fiber: 0, price: 12, type: "veg" as const },
+
+    // Added healthy options
+    { name: "Amla Juice (no sugar)", quantity: "1 glass (200ml)", calories: 30, protein: 1, carbs: 7, fats: 0, fiber: 2, price: 20, type: "veg" as const },
+    { name: "Protein Shake (whey/pea, water)", quantity: "1 glass (250ml)", calories: 120, protein: 22, carbs: 4, fats: 2, fiber: 1, price: 60, type: "veg" as const },
+    { name: "Lemon Ginger Detox Water", quantity: "1 glass (250ml)", calories: 8, protein: 0, carbs: 2, fats: 0, fiber: 0, price: 10, type: "veg" as const },
+    { name: "Soy Milk (unsweetened)", quantity: "1 glass (200ml)", calories: 70, protein: 7, carbs: 4, fats: 3, fiber: 1, price: 25, type: "veg" as const },
+    { name: "Black Coffee (no sugar)", quantity: "1 cup (150ml)", calories: 4, protein: 0, carbs: 0, fats: 0, fiber: 0, price: 10, type: "veg" as const },
 
     // Dairy & protein-rich
     { name: "Skim Milk (1 cup)", quantity: "200ml", calories: 90, protein: 9, carbs: 12, fats: 0, fiber: 0, price: 20, type: "veg" as const },
