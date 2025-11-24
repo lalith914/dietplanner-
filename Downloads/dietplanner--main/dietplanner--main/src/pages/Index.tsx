@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Calculator, Utensils, Activity, DollarSign } from "lucide-react";
 
+// Diet Planner with 60+ foods & detailed recipes for all meals
+
 interface FormData {
   age: number;
   sex: "male" | "female" | "";
