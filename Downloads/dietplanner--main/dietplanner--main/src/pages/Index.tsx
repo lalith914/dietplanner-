@@ -121,6 +121,7 @@ interface FoodItem {
   fiber: number;
   price: number;
   type: "veg" | "nonveg";
+  recipe: string;
 }
 
 interface MealPlan {
@@ -157,155 +158,161 @@ const ACTIVITY_FACTORS = {
 const FOOD_DATABASE = {
   breakfast: [
     // Vegetarian - South Indian / Healthy
-    { name: "Ragi Porridge (Finger Millet)", quantity: "1 cup (200g)", calories: 220, protein: 6, carbs: 42, fats: 3, fiber: 6, price: 30, type: "veg" as const },
-    { name: "Broken Wheat Upma (Dalia Upma)", quantity: "1 cup (200g)", calories: 210, protein: 7, carbs: 40, fats: 4, fiber: 5, price: 25, type: "veg" as const },
-    { name: "Idli (3 small, ragi + rice blend)", quantity: "3 pieces (130g)", calories: 170, protein: 6, carbs: 36, fats: 1, fiber: 2, price: 28, type: "veg" as const },
-    { name: "Steamed Rava Idli with Veg", quantity: "3 pieces (140g)", calories: 190, protein: 7, carbs: 38, fats: 2, fiber: 3, price: 32, type: "veg" as const },
-    { name: "Oats Poha with Vegetables", quantity: "1 cup (180g)", calories: 200, protein: 8, carbs: 36, fats: 4, fiber: 6, price: 30, type: "veg" as const },
+    { name: "Ragi Porridge (Finger Millet)", quantity: "1 cup (200g)", calories: 220, protein: 6, carbs: 42, fats: 3, fiber: 6, price: 30, type: "veg" as const, recipe: "Roast 1/4 cup ragi flour on a pan, boil 1 cup water, add ragi slowly while stirring to avoid lumps, cook for 8-10 min, add salt & ghee. Serve hot with jaggery or fruit." },
+    
+    { name: "Broken Wheat Upma (Dalia Upma)", quantity: "1 cup (200g)", calories: 210, protein: 7, carbs: 40, fats: 4, fiber: 5, price: 25, type: "veg" as const, recipe: "Roast 1/2 cup broken wheat, temper 1 tbsp oil with mustard seeds & curry leaves, add chopped veggies (peas, carrots), add roasted wheat, cook with 1 cup water till done (8-10 min). Season with salt & lemon." },
+    
+    { name: "Idli (3 small, ragi + rice blend)", quantity: "3 pieces (130g)", calories: 170, protein: 6, carbs: 36, fats: 1, fiber: 2, price: 28, type: "veg" as const, recipe: "Mix idli batter (1:1 rice & urad dal), add salt & let ferment overnight. Pour into idli molds, steam for 8-10 min in boiling water. Serve with sambar & coconut chutney." },
+    
+    { name: "Oats Poha with Vegetables", quantity: "1 cup (180g)", calories: 200, protein: 8, carbs: 36, fats: 4, fiber: 6, price: 30, type: "veg" as const, recipe: "Heat 1 tbsp oil, add mustard seeds & curry leaves, sauté chopped onion & veggies (peas, carrots, beans), add 1 cup oats, mix well, cook 5 min. Add salt & lemon juice. Garnish with peanuts." },
+    
+    { name: "Multigrain Paratha with Curd", quantity: "1 piece (120g) + 100g curd", calories: 260, protein: 10, carbs: 34, fats: 8, fiber: 6, price: 40, type: "veg" as const, recipe: "Knead multigrain flour with water & salt, roll thin, pan-fry with minimal ghee until golden brown. Serve with plain yogurt & pickle." },
+    
+    { name: "Besan & Oats Chilla (2)", quantity: "2 pieces (160g)", calories: 220, protein: 14, carbs: 28, fats: 6, fiber: 6, price: 28, type: "veg" as const, recipe: "Mix besan + oats flour (equal), add chopped onion, ginger-green chili, salt, water to make thin batter. Heat non-stick pan, pour batter, cook 2-3 min per side. Serve with chutney." },
+    
+    { name: "Rava Dosa - minimal oil", quantity: "1 piece (140g)", calories: 180, protein: 6, carbs: 34, fats: 3, fiber: 2, price: 30, type: "veg" as const, recipe: "Mix rava + all-purpose flour (1:1), add salt, water to make thin batter, let sit 5 min. Heat dosa pan, pour batter, spread thin, cook with minimal oil. Fold & serve with sambar & chutney." },
+    
+    { name: "Greek Yogurt Parfait with Berries", quantity: "1 cup (200g)", calories: 220, protein: 14, carbs: 25, fats: 6, fiber: 4, price: 60, type: "veg" as const, recipe: "Layer Greek yogurt (150g) with granola (30g), fresh berries (40g), and honey (1 tsp). Mix well before eating or keep layered for texture. Serve chilled." },
+    
+    { name: "Moong Dal Cheela with Paneer", quantity: "2 pieces (200g)", calories: 260, protein: 18, carbs: 30, fats: 8, fiber: 5, price: 45, type: "veg" as const, recipe: "Soak moong dal 4 hrs, blend with onion & ginger, add salt & paneer cubes. Heat pan with oil, pour batter, cook 2-3 min per side until golden. Serve with mint chutney." },
+    
+    { name: "Quinoa Upma with Veggies", quantity: "1 cup (200g)", calories: 240, protein: 9, carbs: 38, fats: 5, fiber: 6, price: 60, type: "veg" as const, recipe: "Cook quinoa (1/2 cup), heat oil, temper with mustard seeds, add chopped veggies & cooked quinoa, stir-fry 3-4 min. Season with salt, turmeric & lemon juice." },
+    
+    { name: "Fruit & Nut Bowl", quantity: "1 bowl (200g)", calories: 200, protein: 6, carbs: 30, fats: 7, fiber: 5, price: 60, type: "veg" as const, recipe: "Chop seasonal fruits (banana, apple, berries), add almonds (10), walnuts (5), drizzle honey (1 tsp). Mix gently & serve immediately. Add Greek yogurt for protein." },
+    
+    { name: "Egg White Omelette with Spinach", quantity: "150g (3 egg whites)", calories: 120, protein: 20, carbs: 4, fats: 3, fiber: 2, price: 35, type: "nonveg" as const, recipe: "Beat 3 egg whites, add chopped spinach & tomato, salt & pepper. Heat pan with 1 tsp oil, pour mixture, fold when edges set. Cook 2-3 min total. Serve hot." },
+    
+    { name: "Masala Omelette with Ragi Toast", quantity: "200g", calories: 260, protein: 20, carbs: 28, fats: 8, fiber: 4, price: 45, type: "nonveg" as const, recipe: "Beat 1 egg + 2 egg whites, add chopped onion, capsicum, green chili, salt. Cook in oil till set. Toast ragi bread lightly. Serve together with ketchup on side." },
+    
+    { name: "Smoked Salmon on Multigrain Toast", quantity: "80g salmon + 1 slice", calories: 220, protein: 18, carbs: 18, fats: 10, fiber: 2, price: 180, type: "nonveg" as const, recipe: "Toast whole wheat bread slice, spread thin layer of cream cheese, place smoked salmon (80g), add fresh dill & lemon. Serve immediately with green tea." },
+    
+    { name: "Egg Bhurji with Vegetables", quantity: "1 plate (180g)", calories: 240, protein: 16, carbs: 10, fats: 14, fiber: 3, price: 45, type: "nonveg" as const, recipe: "Heat 1 tbsp oil, add finely chopped onion & green chili, scramble 2 eggs into it, add diced tomato & capsicum, salt. Cook 3-4 min till eggs are set & veggies are soft." },
+    
+    { name: "Chicken & Vegetable Upma", quantity: "1 cup (200g)", calories: 300, protein: 20, carbs: 30, fats: 8, fiber: 3, price: 70, type: "nonveg" as const, recipe: "Boil 80g minced chicken with turmeric & salt (5 min). Heat oil, temper with mustard seeds, add chopped veggies, add cooked chicken & 1 cup semolina, stir-fry 5-6 min. Season with salt & lemon." },
+    
+    { name: "Dhokla (Steamed Chickpea Cake)", quantity: "4 pieces (150g)", calories: 200, protein: 10, carbs: 32, fats: 4, fiber: 4, price: 35, type: "veg" as const, recipe: "Soak 1 cup chickpea flour with curds (4 hrs), add baking soda, salt, sugar, pour in greased pan, steam for 20 min. Temper with oil, mustard seeds & curry leaves. Serve with green chutney." },
 
-    // Vegetarian - Breads (healthier versions)
-    { name: "Multigrain Paratha (1) + Curd", quantity: "1 piece (120g) + 100g curd", calories: 260, protein: 10, carbs: 34, fats: 8, fiber: 6, price: 40, type: "veg" as const },
-    { name: "Besan & Oats Chilla (2)", quantity: "2 pieces (160g)", calories: 220, protein: 14, carbs: 28, fats: 6, fiber: 6, price: 28, type: "veg" as const },
-    { name: "Sprouted Moong Toast (2 slices)", quantity: "2 slices (150g)", calories: 230, protein: 12, carbs: 32, fats: 6, fiber: 7, price: 35, type: "veg" as const },
-
-    // Vegetarian - Cereals & Protein-rich
-    { name: "Greek Yogurt + Fruit + Seeds", quantity: "1 cup (200g)", calories: 220, protein: 14, carbs: 25, fats: 6, fiber: 4, price: 60, type: "veg" as const },
-    { name: "Moong Dal Cheela with Paneer Filling", quantity: "2 pieces (200g)", calories: 260, protein: 18, carbs: 30, fats: 8, fiber: 5, price: 45, type: "veg" as const },
-    { name: "Quinoa Upma with Veggies", quantity: "1 cup (200g)", calories: 240, protein: 9, carbs: 38, fats: 5, fiber: 6, price: 60, type: "veg" as const },
-    { name: "Rava (Semolina) Dosa - minimal oil", quantity: "1 piece (140g)", calories: 180, protein: 6, carbs: 34, fats: 3, fiber: 2, price: 30, type: "veg" as const },
-
-    // Vegetarian - Light & quick
-    { name: "Fruit Bowl (seasonal mix)", quantity: "1 bowl (200g)", calories: 120, protein: 2, carbs: 30, fats: 1, fiber: 5, price: 45, type: "veg" as const },
-    { name: "Poached Eggs on Multigrain Toast (veg option = avocado)", quantity: "2 eggs + 1 slice (or avocado)", calories: 270, protein: 16, carbs: 20, fats: 12, fiber: 4, price: 50, type: "veg" as const },
-
-    // Non-Vegetarian - Healthy
-    { name: "Egg White Omelette with Spinach & Tomato", quantity: "150g (3 egg whites)", calories: 120, protein: 20, carbs: 4, fats: 3, fiber: 2, price: 35, type: "nonveg" as const },
-    { name: "Masala Omelette (1 whole + 2 whites) with Ragi Toast", quantity: "200g", calories: 260, protein: 20, carbs: 28, fats: 8, fiber: 4, price: 45, type: "nonveg" as const },
-    { name: "Smoked Salmon on Multigrain (small serving)", quantity: "80g salmon + 1 slice", calories: 220, protein: 18, carbs: 18, fats: 10, fiber: 2, price: 180, type: "nonveg" as const },
-
-    // Non-Vegetarian - Protein-forward
-    { name: "Egg Bhurji with Mixed Veg (minimal oil)", quantity: "1 plate (180g)", calories: 240, protein: 16, carbs: 10, fats: 14, fiber: 3, price: 45, type: "nonveg" as const },
-    { name: "Chicken & Veg Upma (small)", quantity: "1 cup (200g)", calories: 300, protein: 20, carbs: 30, fats: 8, fiber: 3, price: 70, type: "nonveg" as const }
+    { name: "Vegetable Poha", quantity: "1 cup (180g)", calories: 180, protein: 4, carbs: 36, fats: 3, fiber: 5, price: 25, type: "veg" as const, recipe: "Rinse 1 cup poha, heat 1 tbsp oil, add mustard seeds, curry leaves, chopped onion, peas, carrots, add poha, mix well, cook 3-4 min. Season with salt, turmeric & lemon juice." },
   ],
 
   lunch: [
     // Vegetarian - Dal & Rice / Balanced plates
-    { name: "Brown Rice with Toor Dal & Mixed Veg", quantity: "1 plate (300g)", calories: 420, protein: 15, carbs: 68, fats: 7, fiber: 8, price: 70, type: "veg" as const },
-    { name: "Quinoa & Mixed Bean Bowl (Indian spices)", quantity: "1 plate (300g)", calories: 420, protein: 18, carbs: 52, fats: 9, fiber: 10, price: 110, type: "veg" as const },
-    { name: "Sprouted Moong Salad + 1 Roti (multigrain)", quantity: "1 plate + 1 roti", calories: 360, protein: 18, carbs: 40, fats: 6, fiber: 12, price: 65, type: "veg" as const },
-
-    // Vegetarian - Lighter rice dishes
-    { name: "Lemon Brown Rice with Roasted Veg", quantity: "1 plate (300g)", calories: 380, protein: 8, carbs: 64, fats: 6, fiber: 6, price: 60, type: "veg" as const },
-    { name: "Millet Pulao (Bajra/Jowar) with Raita", quantity: "1 plate (300g)", calories: 400, protein: 12, carbs: 58, fats: 8, fiber: 8, price: 85, type: "veg" as const },
-
-    // Vegetarian - Roti Based (healthier)
-    { name: "2 Multigrain Rotis + Paneer Bhurji (low-oil)", quantity: "2 rotis + 150g", calories: 420, protein: 24, carbs: 46, fats: 14, fiber: 6, price: 95, type: "veg" as const },
-    { name: "2 Whole Wheat Rotis + Mixed Veg + Dal", quantity: "2 rotis + 200g veg + dal", calories: 410, protein: 16, carbs: 58, fats: 8, fiber: 9, price: 70, type: "veg" as const },
-    { name: "Chana Masala (light oil) + Brown Rice", quantity: "1 plate (280g)", calories: 420, protein: 16, carbs: 62, fats: 8, fiber: 10, price: 70, type: "veg" as const },
-
-    // Vegetarian - Protein-rich specials
-    { name: "Paneer Tikka Bowl with Millet Rotis", quantity: "1 plate (280g)", calories: 480, protein: 28, carbs: 45, fats: 18, fiber: 5, price: 140, type: "veg" as const },
-    { name: "Mixed Lentil Curry (Masoor+Toor+Moong) + Roti", quantity: "1 plate", calories: 380, protein: 20, carbs: 50, fats: 6, fiber: 10, price: 60, type: "veg" as const },
-
-    // Non-Vegetarian - Balanced lunch
-    { name: "Grilled Chicken Salad + 1 Multigrain Roti", quantity: "200g chicken + 1 roti", calories: 420, protein: 40, carbs: 30, fats: 10, fiber: 6, price: 160, type: "nonveg" as const },
-    { name: "Tandoori Salmon with Brown Rice & Salad", quantity: "150g salmon + 120g rice", calories: 520, protein: 36, carbs: 48, fats: 18, fiber: 3, price: 320, type: "nonveg" as const },
-    { name: "Chicken Curry (light) + Brown Rice", quantity: "180g chicken + 150g rice", calories: 480, protein: 36, carbs: 56, fats: 10, fiber: 2, price: 150, type: "nonveg" as const },
-
-    // Non-Vegetarian - Seafood / Lean meats
-    { name: "Fish Curry (made with minimal oil) + Millet", quantity: "180g fish + 150g millet", calories: 500, protein: 38, carbs: 50, fats: 14, fiber: 2, price: 220, type: "nonveg" as const },
-    { name: "Prawns Stir-fry + Veg Rice", quantity: "150g prawns + 200g rice", calories: 430, protein: 32, carbs: 50, fats: 8, fiber: 2, price: 240, type: "nonveg" as const },
-
-    // Healthy special combos
-    { name: "Bajra Roti (2) + Mixed Vegetable Kurma (low-oil)", quantity: "2 rotis + 200g veg", calories: 390, protein: 10, carbs: 56, fats: 10, fiber: 8, price: 80, type: "veg" as const },
-    { name: "Rajma with Brown Rice (reduced oil)", quantity: "1 plate (300g)", calories: 420, protein: 16, carbs: 62, fats: 6, fiber: 10, price: 70, type: "veg" as const },
-
-    // Light bowls
-    { name: "Kitchari (Moong+Brown Rice) with Ghee (small)", quantity: "1 plate (300g)", calories: 360, protein: 14, carbs: 58, fats: 6, fiber: 6, price: 60, type: "veg" as const }
+    { name: "Brown Rice with Toor Dal & Mixed Veg", quantity: "1 plate (300g)", calories: 420, protein: 15, carbs: 68, fats: 7, fiber: 8, price: 70, type: "veg" as const, recipe: "Cook 1 cup brown rice. Cook 1/2 cup toor dal till soft. Sauté chopped mixed veggies (100g) in oil, add dal, mix with rice, season with salt, turmeric & cumin. Serve hot." },
+    
+    { name: "Quinoa & Mixed Bean Salad", quantity: "1 plate (300g)", calories: 420, protein: 18, carbs: 52, fats: 9, fiber: 10, price: 110, type: "veg" as const, recipe: "Cook quinoa (3/4 cup), boil mixed beans (50g) till soft, chop cucumber, tomato, onion, combine all, dress with olive oil, lemon & salt. Add cumin powder & serve at room temp." },
+    
+    { name: "Sprouted Moong Salad + Multigrain Roti", quantity: "1 plate + 1 roti", calories: 360, protein: 18, carbs: 40, fats: 6, fiber: 12, price: 65, type: "veg" as const, recipe: "Boil sprouted moong (100g), mix with finely chopped cucumber, tomato, onion, add lemon juice, salt, cumin. Prepare multigrain roti separately. Serve together with mint chutn ey." },
+    
+    { name: "Chana Masala with Brown Rice", quantity: "1 plate (280g)", calories: 420, protein: 16, carbs: 62, fats: 8, fiber: 10, price: 70, type: "veg" as const, recipe: "Cook canned chickpeas (1 cup), heat oil, add onion, tomato, ginger-garlic paste, add spices (cumin, coriander, turmeric, garam masala), add chickpeas, simmer 15 min. Serve with brown rice." },
+    
+    { name: "Palak Paneer with 2 Multigrain Rotis", quantity: "1 plate", calories: 440, protein: 26, carbs: 44, fats: 16, fiber: 6, price: 120, type: "veg" as const, recipe: "Blanch 200g spinach, blend smooth, heat 2 tbsp oil, add onion, tomato, add spinach puree, add paneer cubes (80g), simmer 10 min. Make multigrain rotis on the side. Serve together." },
+    
+    { name: "Vegetable Biryani (Low Oil)", quantity: "1 plate (300g)", calories: 380, protein: 10, carbs: 58, fats: 8, fiber: 6, price: 85, type: "veg" as const, recipe: "Soak 1 cup basmati rice, slice vegetables thinly. Layer rice & veggies alternately in pot with minimal oil, add water (2:1), cover, cook on high heat 2 min then low heat 20 min. Fluff with fork." },
+    
+    { name: "Millet Pulao with Yogurt", quantity: "1 plate (300g)", calories: 400, protein: 12, carbs: 58, fats: 8, fiber: 8, price: 85, type: "veg" as const, recipe: "Cook 1 cup millet, heat ghee, temper with whole spices (bay leaf, cinnamon), add chopped veggies, mix with cooked millet, season with salt. Serve with plain yogurt on side." },
+    
+    { name: "Lemon Brown Rice with Roasted Veg", quantity: "1 plate (300g)", calories: 380, protein: 8, carbs: 64, fats: 6, fiber: 6, price: 60, type: "veg" as const, recipe: "Cook brown rice (1 cup), roast veggies (broccoli, carrot, bell pepper) lightly in oil, toss with hot rice, add lemon juice, salt, turmeric. Garnish with cilantro." },
+    
+    { name: "Vegetable Fried Rice with Egg", quantity: "1 plate (300g)", calories: 380, protein: 14, carbs: 56, fats: 10, fiber: 4, price: 60, type: "nonveg" as const, recipe: "Heat oil in wok, scramble 1 egg, add cooked rice (1.5 cups), chopped veggies, soy sauce, salt. Stir-fry 5-6 min. Garnish with green onion & sesame oil." },
+    
+    { name: "Grilled Chicken with Brown Rice", quantity: "200g chicken + rice", calories: 420, protein: 40, carbs: 40, fats: 6, fiber: 2, price: 140, type: "nonveg" as const, recipe: "Marinate 200g chicken breast in yogurt, lemon, salt, spices for 30 min. Grill/pan-fry for 8-10 min. Serve with cooked brown rice (1 cup) & grilled vegetables." },
+    
+    { name: "Tandoori Fish with Millet", quantity: "150g fish + millet", calories: 420, protein: 38, carbs: 48, fats: 8, fiber: 2, price: 180, type: "nonveg" as const, recipe: "Marinate fish (150g) in yogurt, tandoori spices, cook in oven at 200°C for 15 min. Cook millet separately (1 cup with 2 cups water, 25 min). Serve with lemon & salad." },
+    
+    { name: "Chicken Tikka Masala with Rice", quantity: "180g + 150g rice", calories: 480, protein: 36, carbs: 56, fats: 10, fiber: 2, price: 160, type: "nonveg" as const, recipe: "Marinate chicken (180g) in yogurt & spices, grill/pan-fry. Make tomato-cream sauce (tomato + onion + spices), add chicken, simmer 15 min. Serve with basmati rice." },
+    
+    { name: "Vegetable Curry with 2 Rotis", quantity: "1 plate", calories: 340, protein: 10, carbs: 50, fats: 8, fiber: 8, price: 55, type: "veg" as const, recipe: "Heat oil, add onion, ginger-garlic paste, cook till golden, add mixed veggies (pumpkin, peas, carrots), add spices & tomato, simmer 20 min. Make 2 wheat rotis on side. Serve hot." },
+    
+    { name: "Rajma (Kidney Beans) with Brown Rice", quantity: "1 plate (300g)", calories: 420, protein: 16, carbs: 62, fats: 6, fiber: 10, price: 70, type: "veg" as const, recipe: "Soak rajma overnight, pressure cook with salt & turmeric (4 whistles). Make tempering with oil, onion, ginger-garlic, add cooked rajma, simmer with tomato & spices. Serve with brown rice." },
+    
+    { name: "Chickpea & Vegetable Stew", quantity: "1 plate (280g)", calories: 360, protein: 14, carbs: 54, fats: 8, fiber: 10, price: 65, type: "veg" as const, recipe: "Heat oil, sauté onion & garlic, add chickpeas & chopped veggies (spinach, carrots, beans), add vegetable broth, simmer 25-30 min. Season with salt, pepper & herbs. Serve warm." },
   ],
 
   dinner: [
     // Vegetarian - Lighter dinners
-    { name: "Khichdi (Moong+Brown Rice) + Veg Salad", quantity: "1 plate (300g)", calories: 340, protein: 14, carbs: 54, fats: 6, fiber: 6, price: 55, type: "veg" as const },
-    { name: "Mixed Dal Soup + Multigrain Toast", quantity: "1 bowl + 1 slice", calories: 300, protein: 18, carbs: 38, fats: 6, fiber: 8, price: 60, type: "veg" as const },
-    { name: "Grilled Vegetable Platter + 1 Roti", quantity: "1 plate", calories: 320, protein: 8, carbs: 48, fats: 8, fiber: 10, price: 75, type: "veg" as const },
-
-    // Vegetarian - Protein focused
-    { name: "Moong Dal Cheela (3) + Mint Chutney", quantity: "3 pieces (240g)", calories: 330, protein: 20, carbs: 42, fats: 8, fiber: 8, price: 60, type: "veg" as const },
-    { name: "Palak Paneer (light oil) + 2 Rotis (multigrain)", quantity: "1 plate", calories: 440, protein: 26, carbs: 44, fats: 16, fiber: 6, price: 120, type: "veg" as const },
-
-    // Vegetarian - Millets & low-carb
-    { name: "Bajra Khichdi with Bottle Gourd", quantity: "1 plate (300g)", calories: 360, protein: 12, carbs: 52, fats: 6, fiber: 8, price: 70, type: "veg" as const },
-    { name: "Stir-fried Tofu with Veg + 1 Roti", quantity: "1 plate", calories: 380, protein: 22, carbs: 36, fats: 14, fiber: 6, price: 110, type: "veg" as const },
-
-    // Non-Vegetarian - Light dinners
-    { name: "Grilled Chicken with Steamed Veg (no roti)", quantity: "200g chicken + 150g veg", calories: 380, protein: 44, carbs: 18, fats: 10, fiber: 6, price: 160, type: "nonveg" as const },
-    { name: "Tandoori Fish + Salad", quantity: "180g fish + salad", calories: 360, protein: 40, carbs: 10, fats: 12, fiber: 4, price: 220, type: "nonveg" as const },
-
-    // Non-Vegetarian - Protein dinners
-    { name: "Egg Curry (2 eggs) + 1 Multigrain Roti", quantity: "2 eggs + 1 roti", calories: 320, protein: 20, carbs: 28, fats: 12, fiber: 3, price: 80, type: "nonveg" as const },
-    { name: "Prawn & Veg Stir Fry + Small Quinoa", quantity: "150g prawns + 100g quinoa", calories: 420, protein: 34, carbs: 44, fats: 8, fiber: 4, price: 260, type: "nonveg" as const },
-
-    // Comfort-light
-    { name: "Vegetable Soup + Whole Wheat Bread (2 slices)", quantity: "1 bowl + 2 slices", calories: 260, protein: 8, carbs: 38, fats: 6, fiber: 8, price: 55, type: "veg" as const },
-    { name: "Methi Thepla (2) + Low-fat Curd", quantity: "2 pieces + 100g curd", calories: 300, protein: 10, carbs: 40, fats: 8, fiber: 6, price: 50, type: "veg" as const },
-
-    // Heavier healthy options (for athletes / high needs)
-    { name: "Lean Mutton Stew (small) + Millet Roti", quantity: "150g mutton + 1 roti", calories: 500, protein: 36, carbs: 40, fats: 18, fiber: 2, price: 220, type: "nonveg" as const },
-    { name: "Chicken Shorba + Brown Rice (small)", quantity: "1 bowl + 100g rice", calories: 360, protein: 30, carbs: 30, fats: 8, fiber: 2, price: 140, type: "nonveg" as const }
+    { name: "Khichdi with Vegetable Salad", quantity: "1 plate (300g)", calories: 340, protein: 14, carbs: 54, fats: 6, fiber: 6, price: 55, type: "veg" as const, recipe: "Cook 1/2 cup moong dal + 1/2 cup rice in 2 cups water with turmeric & salt till mushy (30 min). Chop cucumber, tomato, onion for salad, dress with lemon & salt. Serve khichdi with salad & ghee." },
+    
+    { name: "Mixed Dal Soup with Toast", quantity: "1 bowl + 1 slice", calories: 300, protein: 18, carbs: 38, fats: 6, fiber: 8, price: 60, type: "veg" as const, recipe: "Boil mixed dal (moong, masoor, toor - 1/2 cup total) with veggies (100g), blend half-smooth, add salt & turmeric. Toast whole wheat bread slice. Serve soup hot with toast on side." },
+    
+    { name: "Grilled Vegetable Platter + Roti", quantity: "1 plate", calories: 320, protein: 8, carbs: 48, fats: 8, fiber: 10, price: 75, type: "veg" as const, recipe: "Slice vegetables (zucchini, capsicum, broccoli, mushroom), brush lightly with oil, grill 8-10 min. Make 1 multigrain roti. Serve grilled veggies with roti, salt & lemon on side." },
+    
+    { name: "Moong Dal Cheela (3) with Chutney", quantity: "3 pieces (240g)", calories: 330, protein: 20, carbs: 42, fats: 8, fiber: 8, price: 60, type: "veg" as const, recipe: "Soak moong dal 4 hrs, blend with onion & ginger, add salt, water for thin batter. Cook 3 cheelas on oil-lightly pan, 2-3 min per side. Serve with mint-coriander chutney." },
+    
+    { name: "Stir-Fried Tofu with Vegetables + Roti", quantity: "1 plate", calories: 380, protein: 22, carbs: 36, fats: 14, fiber: 6, price: 110, type: "veg" as const, recipe: "Press tofu (150g) to remove water, cube it, stir-fry in oil with garlic, add sliced veggies (bell pepper, broccoli), add soy sauce & salt. Cook 5-6 min. Make 1 wheat roti. Serve together." },
+    
+    { name: "Bajra Khichdi with Bottle Gourd", quantity: "1 plate (300g)", calories: 360, protein: 12, carbs: 52, fats: 6, fiber: 8, price: 70, type: "veg" as const, recipe: "Cook bajra (1/2 cup) + moong (1/2 cup) with water, add cubed bottle gourd (50g) midway, cook till tender (30 min). Season with salt, turmeric & ghee. Serve hot." },
+    
+    { name: "Grilled Chicken with Steamed Vegetables", quantity: "200g chicken + veg", calories: 320, protein: 42, carbs: 12, fats: 8, fiber: 4, price: 150, type: "nonveg" as const, recipe: "Marinate chicken (200g) in lemon, salt & herbs, grill 10-12 min. Steam vegetables (100g) separately till tender. Serve hot chicken with steamed veggies & lemon on side." },
+    
+    { name: "Tandoori Fish with Salad", quantity: "180g fish + salad", calories: 340, protein: 38, carbs: 8, fats: 12, fiber: 3, price: 200, type: "nonveg" as const, recipe: "Coat fish (180g) with tandoori spices & yogurt, grill 15 min. Make fresh salad with cucumber, tomato, onion, dress with lemon & salt. Serve fish hot with salad on side." },
+    
+    { name: "Egg Curry with Multigrain Roti", quantity: "2 eggs + 1 roti", calories: 320, protein: 20, carbs: 28, fats: 12, fiber: 3, price: 80, type: "nonveg" as const, recipe: "Hard boil 2 eggs, shell them. Make curry: sauté onion, add tomato & spices, add eggs, simmer 10 min. Make 1 multigrain roti. Serve curry with roti." },
+    
+    { name: "Prawn & Vegetable Stir Fry", quantity: "150g + 100g veg", calories: 380, protein: 32, carbs: 30, fats: 10, fiber: 4, price: 240, type: "nonveg" as const, recipe: "Heat oil, add garlic & ginger, add veggies (broccoli, bell pepper), cook 3 min, add prawns (150g), cook 4-5 min till pink. Add salt, soy sauce. Serve hot over steamed rice (100g)." },
+    
+    { name: "Vegetable Soup with Whole Wheat Bread", quantity: "1 bowl + 2 slices", calories: 260, protein: 8, carbs: 38, fats: 6, fiber: 8, price: 55, type: "veg" as const, recipe: "Sauté onion & garlic, add mixed chopped veggies (150g), vegetable broth (2 cups), simmer 20 min, blend partially. Season with salt & pepper. Toast 2 bread slices, serve with soup." },
+    
+    { name: "Methi Thepla with Low-Fat Curd", quantity: "2 pieces + 100g curd", calories: 300, protein: 10, carbs: 40, fats: 8, fiber: 6, price: 50, type: "veg" as const, recipe: "Knead multigrain flour + fenugreek leaves (50g) with salt, water, roll thin, pan-fry with minimal oil. Serve 2 theplas with plain yogurt (100g) & pickle on side." },
+    
+    { name: "Lean Mutton Stew with Millet Roti", quantity: "150g mutton + roti", calories: 500, protein: 36, carbs: 40, fats: 18, fiber: 2, price: 220, type: "nonveg" as const, recipe: "Cook mutton (150g) with onion, ginger-garlic, tomato & spices in pressure cooker (3 whistles). Make 1 millet roti separately. Serve hot stew with roti & vegetables." },
+    
+    { name: "Chicken Shorba with Brown Rice", quantity: "1 bowl + 100g rice", calories: 360, protein: 28, carbs: 40, fats: 8, fiber: 1, price: 130, type: "nonveg" as const, recipe: "Boil chicken (150g) with whole spices, onion, ginger, turmeric till tender, strain, add salt & pepper. Cook brown rice separately (1/2 cup). Serve hot shorba with rice bowl on side." },
   ],
 
   snack: [
     // Vegetarian - Savory healthy
-    { name: "Roasted Chana + Peanuts Mix (50g)", quantity: "50g", calories: 260, protein: 13, carbs: 20, fats: 14, fiber: 7, price: 25, type: "veg" as const },
-    { name: "Baked Samosa (1) with Salad", quantity: "1 piece (80g)", calories: 160, protein: 4, carbs: 24, fats: 6, fiber: 3, price: 20, type: "veg" as const },
-    { name: "Makhana (roasted, light seasoning)", quantity: "50g", calories: 70, protein: 3, carbs: 14, fats: 1, fiber: 2, price: 40, type: "veg" as const },
-
-    // Vegetarian - Nuts, fruits
-    { name: "Almonds (20g) + Walnuts (10g)", quantity: "30g", calories: 190, protein: 6, carbs: 4, fats: 16, fiber: 3, price: 45, type: "veg" as const },
-    { name: "Apple + Peanut Butter (1 tbsp)", quantity: "1 apple + 15g PB", calories: 220, protein: 4, carbs: 32, fats: 9, fiber: 5, price: 50, type: "veg" as const },
-
-    // Vegetarian - Savory low-cal
-    { name: "Cucumber & Carrot Sticks + Hummus (2 tbsp)", quantity: "150g veg + 30g hummus", calories: 140, protein: 4, carbs: 14, fats: 8, fiber: 4, price: 45, type: "veg" as const },
-    { name: "Sprouted Moong Chaat (light)", quantity: "1 cup (150g)", calories: 160, protein: 12, carbs: 22, fats: 2, fiber: 8, price: 40, type: "veg" as const },
-
-    // Vegetarian - Sweets (healthier)
-    { name: "Dates (3) + Mixed Nuts (10g)", quantity: "approx 40g", calories: 150, protein: 3, carbs: 30, fats: 5, fiber: 4, price: 30, type: "veg" as const },
-
-    // Non-Vegetarian - Protein snacks
-    { name: "Boiled Egg (1) + Sprouts Salad (small)", quantity: "1 egg + 50g sprouts", calories: 190, protein: 16, carbs: 6, fats: 10, fiber: 2, price: 30, type: "nonveg" as const },
-    { name: "Grilled Chicken Strips (100g)", quantity: "100g", calories: 150, protein: 28, carbs: 2, fats: 4, fiber: 0, price: 90, type: "nonveg" as const },
-
-    // Packable / on-the-go
-    { name: "Home-made Trail Mix (30g)", quantity: "30g", calories: 160, protein: 4, carbs: 12, fats: 10, fiber: 3, price: 35, type: "veg" as const },
-    { name: "Whole Fruit (Guava / Orange / Pear)", quantity: "1 medium", calories: 80, protein: 2, carbs: 18, fats: 0, fiber: 5, price: 25, type: "veg" as const },
-
-    // Healthy packaged alternatives
-    { name: "Roasted Fox Nuts (Makhana) Masala (50g)", quantity: "50g", calories: 140, protein: 4, carbs: 28, fats: 1, fiber: 2, price: 60, type: "veg" as const },
-    { name: "Baked Sweet Potato Wedges (150g)", quantity: "150g", calories: 140, protein: 2, carbs: 32, fats: 0, fiber: 4, price: 35, type: "veg" as const }
+    { name: "Roasted Chana & Peanut Mix", quantity: "50g", calories: 260, protein: 13, carbs: 20, fats: 14, fiber: 7, price: 25, type: "veg" as const, recipe: "Dry roast 25g chana, 15g peanuts, 10g cashews on low heat for 5-7 min, stirring occasionally. Cool completely, add salt & chaat masala. Store in airtight container." },
+    
+    { name: "Baked Samosa with Salad", quantity: "1 piece (80g)", calories: 160, protein: 4, carbs: 24, fats: 6, fiber: 3, price: 20, type: "veg" as const, recipe: "Prepare samosa filling: boil potato (60g), add peas, cumin, salt, chili powder. Wrap in pastry, brush with oil, bake at 180°C for 20 min. Serve with fresh salad (cucumber, tomato)." },
+    
+    { name: "Makhana (Fox Nuts) - Roasted", quantity: "50g", calories: 70, protein: 3, carbs: 14, fats: 1, fiber: 2, price: 40, type: "veg" as const, recipe: "Heat 1 tsp oil in pan, add makhana, roast on medium-low heat for 8-10 min, stirring constantly. Add salt & chaat masala while hot. Cool & store in airtight container." },
+    
+    { name: "Mixed Nuts - Almonds & Walnuts", quantity: "30g", calories: 190, protein: 6, carbs: 4, fats: 16, fiber: 3, price: 45, type: "veg" as const, recipe: "Soak almonds (20) in water for 4 hrs, peel off skin, roast lightly. Mix with walnuts (10 halves). Eat as snack. Can store in refrigerator for 1 week." },
+    
+    { name: "Apple with Peanut Butter", quantity: "1 apple + 15g PB", calories: 220, protein: 4, carbs: 32, fats: 9, fiber: 5, price: 50, type: "veg" as const, recipe: "Slice 1 medium apple, spread natural peanut butter (1 tbsp) on a plate, dip apple slices & eat. Or spread PB on apple slices & stack them together." },
+    
+    { name: "Cucumber & Carrot Sticks with Hummus", quantity: "150g veg + 30g hummus", calories: 140, protein: 4, carbs: 14, fats: 8, fiber: 4, price: 45, type: "veg" as const, recipe: "Cut cucumber & carrots into sticks, refrigerate. Make hummus: blend canned chickpeas with tahini, lemon, garlic, salt. Serve sticks with hummus dip." },
+    
+    { name: "Sprouted Moong Chaat", quantity: "1 cup (150g)", calories: 160, protein: 12, carbs: 22, fats: 2, fiber: 8, price: 40, type: "veg" as const, recipe: "Boil sprouted moong (100g), cool, mix with finely chopped cucumber, tomato, onion, add lemon juice, salt, cumin powder, chaat masala. Serve at room temperature." },
+    
+    { name: "Dates & Mixed Nuts", quantity: "approx 40g", calories: 150, protein: 3, carbs: 30, fats: 5, fiber: 4, price: 30, type: "veg" as const, recipe: "Pit 3 dates (remove seed), stuff with almond (1) or walnut piece, serve as-is. Can also chop & mix together. Great for energy boost." },
+    
+    { name: "Boiled Egg & Sprout Salad", quantity: "1 egg + 50g sprouts", calories: 190, protein: 16, carbs: 6, fats: 10, fiber: 2, price: 30, type: "nonveg" as const, recipe: "Boil 1 egg (8-10 min), cool, slice. Mix sprouted mung with cucumber, tomato, dress with lemon & salt. Top with egg slices & serve." },
+    
+    { name: "Grilled Chicken Strips", quantity: "100g", calories: 150, protein: 28, carbs: 2, fats: 4, fiber: 0, price: 90, type: "nonveg" as const, recipe: "Cut chicken breast (100g) into strips, marinate in lemon, salt & pepper for 15 min, grill on skewers for 8-10 min, turning occasionally. Serve with lemon on side." },
+    
+    { name: "Home-made Trail Mix", quantity: "30g", calories: 160, protein: 4, carbs: 12, fats: 10, fiber: 3, price: 35, type: "veg" as const, recipe: "Mix roasted peanuts (10g), almonds (8), raisins (8), sunflower seeds (4g), store in airtight container. Eat by handful as needed. Make in batches of 200g." },
+    
+    { name: "Fresh Whole Fruit", quantity: "1 medium", calories: 80, protein: 2, carbs: 18, fats: 0, fiber: 5, price: 25, type: "veg" as const, recipe: "Choose seasonal fruit: apple (150g), orange (200g), pear (180g), or guava (150g). Wash well, eat fresh or cut into pieces. Avoid canned/processed options." },
+    
+    { name: "Roasted Chickpea Snack", quantity: "50g", calories: 180, protein: 10, carbs: 24, fats: 5, fiber: 6, price: 20, type: "veg" as const, recipe: "Rinse canned chickpeas, dry well, toss with oil & spices (cumin, chaat masala), roast at 200°C for 25-30 min, shaking halfway. Cool & store in airtight container." },
+    
+    { name: "Baked Sweet Potato Wedges", quantity: "150g", calories: 140, protein: 2, carbs: 32, fats: 0, fiber: 4, price: 35, type: "veg" as const, recipe: "Cut sweet potato (150g) into wedges, brush with oil, season with salt & paprika, bake at 200°C for 25-30 min till crispy. Serve hot or at room temperature." },
   ],
 
   drink: [
     // Hot & low-calorie
-    { name: "Green Tea - Lemon & Honey (no sugar)", quantity: "1 cup (200ml)", calories: 10, protein: 0, carbs: 2, fats: 0, fiber: 0, price: 15, type: "veg" as const },
-    { name: "Herbal Tulsi Tea", quantity: "1 cup (200ml)", calories: 5, protein: 0, carbs: 1, fats: 0, fiber: 0, price: 12, type: "veg" as const },
-
-    // Dairy & protein-rich
-    { name: "Skim Milk (1 cup)", quantity: "200ml", calories: 90, protein: 9, carbs: 12, fats: 0, fiber: 0, price: 20, type: "veg" as const },
-    { name: "Buttermilk (chaas) - no added sugar", quantity: "1 glass (200ml)", calories: 50, protein: 3, carbs: 4, fats: 1, fiber: 0, price: 12, type: "veg" as const },
-
-    // Smoothies & shakes (healthy)
-    { name: "Banana+Spinach Protein Smoothie (whey or pea)", quantity: "1 glass (300ml)", calories: 220, protein: 18, carbs: 30, fats: 4, fiber: 6, price: 80, type: "veg" as const },
-    { name: "Mango Lassi (low sugar, small)", quantity: "1 glass (200ml)", calories: 150, protein: 6, carbs: 24, fats: 3, fiber: 1, price: 50, type: "veg" as const },
-
-    // Juices & hydrating
-    { name: "Coconut Water (fresh)", quantity: "1 glass (300ml)", calories: 60, protein: 2, carbs: 12, fats: 0, fiber: 0, price: 35, type: "veg" as const },
-    { name: "Nimbu Pani (no sugar, salted)", quantity: "1 glass (200ml)", calories: 8, protein: 0, carbs: 1, fats: 0, fiber: 0, price: 8, type: "veg" as const },
-    { name: "Carrot-Apple Juice (no sugar)", quantity: "1 glass (200ml)", calories: 90, protein: 1, carbs: 22, fats: 0, fiber: 3, price: 45, type: "veg" as const },
-
-    // Traditional tonics & warm drinks
-    { name: "Turmeric Milk (golden milk, low-fat)", quantity: "1 cup (200ml)", calories: 120, protein: 6, carbs: 10, fats: 4, fiber: 0, price: 30, type: "veg" as const },
-    { name: "Jeera Water (warm)", quantity: "1 glass (200ml)", calories: 5, protein: 0, carbs: 1, fats: 0, fiber: 0, price: 5, type: "veg" as const }
+    { name: "Green Tea - Lemon & Honey", quantity: "1 cup (200ml)", calories: 10, protein: 0, carbs: 2, fats: 0, fiber: 0, price: 15, type: "veg" as const, recipe: "Boil water, add 1 green tea bag, steep for 3-4 min, add lemon slice & 1 tsp raw honey (when cooled slightly). Drink fresh without sugar for best benefits." },
+    
+    { name: "Herbal Tulsi Tea", quantity: "1 cup (200ml)", calories: 5, protein: 0, carbs: 1, fats: 0, fiber: 0, price: 12, type: "veg" as const, recipe: "Boil water with 5-6 fresh tulsi leaves, add 1 small piece ginger, lemon slice, steep 5 min. Strain & drink. Avoid sugar, you can add jaggery if needed." },
+    
+    { name: "Skim Milk", quantity: "200ml", calories: 90, protein: 9, carbs: 12, fats: 0, fiber: 0, price: 20, type: "veg" as const, recipe: "Heat milk till warm, add a pinch of turmeric or cardamom for flavor. Drink warm without sugar for best calcium absorption. Serve in the morning or evening." },
+    
+    { name: "Buttermilk (Chaas) - Unsweetened", quantity: "1 glass (200ml)", calories: 50, protein: 3, carbs: 4, fats: 1, fiber: 0, price: 12, type: "veg" as const, recipe: "Blend yogurt (150g) with water (50ml), add salt, cumin powder & finely chopped ginger. Churn well. Serve chilled immediately after preparation." },
+    
+    { name: "Banana Spinach Protein Smoothie", quantity: "1 glass (300ml)", calories: 220, protein: 18, carbs: 30, fats: 4, fiber: 6, price: 80, type: "veg" as const, recipe: "Blend 1 banana, 50g fresh spinach, 1 scoop protein powder, 150ml milk, 1 tbsp nut butter, ice cubes. Blend until smooth. Drink immediately for maximum nutrition." },
+    
+    { name: "Mango Lassi - Low Sugar", quantity: "1 glass (200ml)", calories: 150, protein: 6, carbs: 24, fats: 3, fiber: 1, price: 50, type: "veg" as const, recipe: "Blend 60g mango (ripe), 150g plain yogurt, 50ml milk, 1/2 tsp cardamom powder, minimal honey (1/2 tsp). Serve chilled. Avoid adding extra sugar." },
+    
+    { name: "Coconut Water - Fresh", quantity: "1 glass (300ml)", calories: 60, protein: 2, carbs: 12, fats: 0, fiber: 0, price: 35, type: "veg" as const, recipe: "Use fresh young coconut, pierce the top with a sharp object, pour water into glass. Drink fresh immediately. Can be stored in refrigerator for 1-2 days max." },
+    
+    { name: "Lemon Water - Salted (Nimbu Pani)", quantity: "1 glass (200ml)", calories: 8, protein: 0, carbs: 1, fats: 0, fiber: 0, price: 8, type: "veg" as const, recipe: "Squeeze 1/2 lemon into water, add salt & cumin powder, optionally add ginger slice. Mix well. Drink at room temperature or chilled. Best consumed fresh." },
+    
+    { name: "Carrot-Apple Juice - Unsweetened", quantity: "1 glass (200ml)", calories: 90, protein: 1, carbs: 22, fats: 0, fiber: 3, price: 45, type: "veg" as const, recipe: "Juice 1 large carrot + 1 apple using a juicer, add water if too concentrated (1:1 ratio), drink immediately. No added sugar. Can add ginger for extra flavor & warmth." },
+    
+    { name: "Golden Milk (Turmeric Milk)", quantity: "1 cup (200ml)", calories: 120, protein: 6, carbs: 10, fats: 4, fiber: 0, price: 30, type: "veg" as const, recipe: "Heat milk (200ml), add 1/4 tsp turmeric powder, pinch black pepper, cinnamon stick (optional), honey (1/2 tsp). Simmer 2 min, strain. Drink warm before bed." },
+    
+    { name: "Jeera Water - Warm", quantity: "1 glass (200ml)", calories: 5, protein: 0, carbs: 1, fats: 0, fiber: 0, price: 5, type: "veg" as const, recipe: "Soak 1 tsp jeera in water overnight (or boil for 5 min), strain into glass. Drink warm on empty stomach in morning. Aids digestion & metabolism. Best for digestive health." },
   ]
 };
 
