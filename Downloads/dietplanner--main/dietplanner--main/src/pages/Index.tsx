@@ -657,7 +657,7 @@ const FOOD_DATABASE = {
                         <span className="text-lg font-bold text-foreground">{typedFood.fiber}g</span>
                       </div>
                     </div>
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center mb-4">
                       <div className="flex items-center gap-4">
                         <span className="text-muted-foreground">
                           <span className="font-semibold text-foreground">{typedFood.calories}</span> cal
@@ -667,6 +667,12 @@ const FOOD_DATABASE = {
                         </span>
                       </div>
                     </div>
+                    {typedFood.recipe && (
+                      <div className="bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-lg">
+                        <h5 className="font-semibold text-emerald-900 mb-2 text-sm">📖 Recipe Instructions:</h5>
+                        <p className="text-sm text-emerald-800 leading-relaxed">{typedFood.recipe}</p>
+                      </div>
+                    )}
                   </motion.div>
                 );
               })}
