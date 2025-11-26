@@ -1113,6 +1113,7 @@ const FOOD_DATABASE = {
                 <label className="block text-foreground font-semibold mb-2">Age</label>
                 <input
                   type="number"
+                  step="1"
                   min="15"
                   max="100"
                   value={formData.age === 0 ? "" : formData.age}
@@ -1122,7 +1123,7 @@ const FOOD_DATABASE = {
                       updateFormData("age", 0);
                     } else {
                       const num = parseInt(val, 10);
-                      if (!isNaN(num)) updateFormData("age", num);
+                      if (!isNaN(num) && num >= 15 && num <= 100) updateFormData("age", num);
                     }
                   }}
                   className="w-full px-4 py-3 rounded-xl border-2 border-input focus:border-primary focus:outline-none transition-colors bg-white"
@@ -1163,7 +1164,7 @@ const FOOD_DATABASE = {
                       updateFormData("weight", 0);
                     } else {
                       const num = parseFloat(val);
-                      if (!isNaN(num)) updateFormData("weight", num);
+                      if (!isNaN(num) && num >= 30 && num <= 200) updateFormData("weight", num);
                     }
                   }}
                   className="w-full px-4 py-3 rounded-xl border-2 border-input focus:border-primary focus:outline-none transition-colors bg-white"
@@ -1175,6 +1176,7 @@ const FOOD_DATABASE = {
                 <label className="block text-foreground font-semibold mb-2">Height (cm)</label>
                 <input
                   type="number"
+                  step="1"
                   min="120"
                   max="250"
                   value={formData.height === 0 ? "" : formData.height}
@@ -1184,7 +1186,7 @@ const FOOD_DATABASE = {
                       updateFormData("height", 0);
                     } else {
                       const num = parseInt(val, 10);
-                      if (!isNaN(num)) updateFormData("height", num);
+                      if (!isNaN(num) && num >= 120 && num <= 250) updateFormData("height", num);
                     }
                   }}
                   className="w-full px-4 py-3 rounded-xl border-2 border-input focus:border-primary focus:outline-none transition-colors bg-white"
@@ -1249,6 +1251,7 @@ const FOOD_DATABASE = {
                 <label className="block text-foreground font-semibold mb-2">Daily Budget (₹)</label>
                 <input
                   type="number"
+                  step="100"
                   min="100"
                   max="5000"
                   value={formData.budget === 0 ? "" : formData.budget}
@@ -1258,7 +1261,7 @@ const FOOD_DATABASE = {
                       updateFormData("budget", 0);
                     } else {
                       const num = parseInt(val, 10);
-                      if (!isNaN(num)) updateFormData("budget", num);
+                      if (!isNaN(num) && num >= 100 && num <= 5000) updateFormData("budget", num);
                     }
                   }}
                   className="w-full px-4 py-3 rounded-xl border-2 border-input focus:border-primary focus:outline-none transition-colors bg-white"
