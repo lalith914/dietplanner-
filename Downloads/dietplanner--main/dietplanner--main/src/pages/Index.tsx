@@ -160,7 +160,6 @@ const ACTIVITY_FACTORS = {
 const FOOD_DATABASE = {
   breakfast: [
     { name: "Ragi Porridge", quantity: "1 plate (300g)", calories: 212, protein: 14, carbs: 45, fats: 10, fiber: 5, price: 134, type: "veg" as const, recipe: "Prepare ragi porridge using fresh vegetables, minimal oil, and serve warm." },
-    { name: "Broken Wheat Upma", quantity: "1 plate (300g)", calories: 479, protein: 8, carbs: 67, fats: 16, fiber: 3, price: 43, type: "veg" as const, recipe: "Prepare broken wheat upma using fresh vegetables, minimal oil, and serve warm." },
     { name: "Idli (Ragi+Rice)", quantity: "1 plate (300g)", calories: 311, protein: 13, carbs: 62, fats: 3, fiber: 11, price: 65, type: "veg" as const, recipe: "Prepare idli (ragi+rice) using fresh vegetables, minimal oil, and serve warm." },
     { name: "Oats Poha", quantity: "1 cup (200g)", calories: 312, protein: 20, carbs: 67, fats: 11, fiber: 3, price: 137, type: "veg" as const, recipe: "Prepare oats poha using fresh vegetables, minimal oil, and serve warm." },
     { name: "Multigrain Paratha", quantity: "1 bowl (250g)", calories: 416, protein: 16, carbs: 47, fats: 7, fiber: 6, price: 137, type: "veg" as const, recipe: "Prepare multigrain paratha using fresh vegetables, minimal oil, and serve warm." },
@@ -168,7 +167,6 @@ const FOOD_DATABASE = {
     { name: "Rava Dosa", quantity: "1 serving", calories: 222, protein: 20, carbs: 64, fats: 6, fiber: 9, price: 50, type: "veg" as const, recipe: "Prepare rava dosa using fresh vegetables, minimal oil, and serve warm." },
     { name: "Greek Yogurt Parfait", quantity: "1 serving", calories: 516, protein: 17, carbs: 66, fats: 9, fiber: 4, price: 45, type: "veg" as const, recipe: "Prepare greek yogurt parfait using fresh vegetables, minimal oil, and serve warm." },
     { name: "Moong Dal Cheela", quantity: "1 bowl (250g)", calories: 348, protein: 8, carbs: 44, fats: 6, fiber: 9, price: 75, type: "veg" as const, recipe: "Prepare moong dal cheela using fresh vegetables, minimal oil, and serve warm." },
-    { name: "Quinoa Upma", quantity: "1 cup (200g)", calories: 386, protein: 11, carbs: 53, fats: 14, fiber: 6, price: 125, type: "veg" as const, recipe: "Prepare quinoa upma using fresh vegetables, minimal oil, and serve warm." },
     { name: "Fruit & Nut Bowl", quantity: "1 serving", calories: 236, protein: 25, carbs: 70, fats: 8, fiber: 11, price: 133, type: "veg" as const, recipe: "Prepare fruit & nut bowl using fresh vegetables, minimal oil, and serve warm." },
     { name: "Dhokla", quantity: "1 bowl (250g)", calories: 283, protein: 20, carbs: 54, fats: 11, fiber: 11, price: 68, type: "veg" as const, recipe: "Prepare dhokla using fresh vegetables, minimal oil, and serve warm." },
     { name: "Vegetable Poha", quantity: "1 serving", calories: 228, protein: 13, carbs: 32, fats: 13, fiber: 9, price: 74, type: "veg" as const, recipe: "Prepare vegetable poha using fresh vegetables, minimal oil, and serve warm." },
@@ -200,10 +198,8 @@ const FOOD_DATABASE = {
     { name: "Vegetable Sandwich (multigrain)", quantity: "1 cup (200g)", calories: 230, protein: 11, carbs: 54, fats: 3, fiber: 9, price: 73, type: "veg" as const, recipe: "Prepare vegetable sandwich (multigrain) using fresh vegetables, minimal oil, and serve warm." },
     { name: "Tomato Onion Uttapam", quantity: "1 cup (200g)", calories: 346, protein: 19, carbs: 74, fats: 18, fiber: 5, price: 64, type: "veg" as const, recipe: "Prepare tomato onion uttapam using fresh vegetables, minimal oil, and serve warm." },
     { name: "Spinach Paratha", quantity: "1 serving", calories: 311, protein: 7, carbs: 67, fats: 4, fiber: 8, price: 47, type: "veg" as const, recipe: "Prepare spinach paratha using fresh vegetables, minimal oil, and serve warm." },
-    { name: "Carrot Rava Upma", quantity: "1 plate (300g)", calories: 499, protein: 21, carbs: 62, fats: 8, fiber: 3, price: 105, type: "veg" as const, recipe: "Prepare carrot rava upma using fresh vegetables, minimal oil, and serve warm." },
     { name: "Muesli with Milk", quantity: "1 plate (300g)", calories: 295, protein: 8, carbs: 68, fats: 5, fiber: 6, price: 91, type: "veg" as const, recipe: "Prepare muesli with milk using fresh vegetables, minimal oil, and serve warm." },
     { name: "Cottage Cheese Toast", quantity: "1 plate (300g)", calories: 491, protein: 13, carbs: 67, fats: 4, fiber: 12, price: 50, type: "veg" as const, recipe: "Prepare cottage cheese toast using fresh vegetables, minimal oil, and serve warm." },
-    { name: "Corn Upma", quantity: "1 cup (200g)", calories: 498, protein: 24, carbs: 63, fats: 13, fiber: 7, price: 66, type: "veg" as const, recipe: "Prepare corn upma using fresh vegetables, minimal oil, and serve warm." },
     { name: "Sweet Pongal (low sugar)", quantity: "1 serving", calories: 322, protein: 14, carbs: 55, fats: 7, fiber: 7, price: 98, type: "veg" as const, recipe: "Prepare sweet pongal (low sugar) using fresh vegetables, minimal oil, and serve warm." },
     { name: "Mixed Millet Idli", quantity: "1 serving", calories: 237, protein: 6, carbs: 59, fats: 6, fiber: 4, price: 108, type: "veg" as const, recipe: "Prepare mixed millet idli using fresh vegetables, minimal oil, and serve warm." },
     { name: "Beetroot Paratha", quantity: "1 bowl (250g)", calories: 459, protein: 14, carbs: 38, fats: 14, fiber: 4, price: 71, type: "veg" as const, recipe: "Prepare beetroot paratha using fresh vegetables, minimal oil, and serve warm." },
@@ -217,13 +213,11 @@ const FOOD_DATABASE = {
     { name: "Soya Granola Bowl", quantity: "1 bowl (250g)", calories: 479, protein: 7, carbs: 53, fats: 7, fiber: 9, price: 56, type: "veg" as const, recipe: "Prepare soya granola bowl using fresh vegetables, minimal oil, and serve warm." },
     { name: "Moong Sprout Pancake", quantity: "1 plate (300g)", calories: 357, protein: 17, carbs: 80, fats: 4, fiber: 8, price: 66, type: "veg" as const, recipe: "Prepare moong sprout pancake using fresh vegetables, minimal oil, and serve warm." },
     { name: "Ragi Porridge 58", quantity: "1 bowl (250g)", calories: 252, protein: 17, carbs: 79, fats: 16, fiber: 12, price: 135, type: "veg" as const, recipe: "Prepare ragi porridge 58 using fresh vegetables, minimal oil, and serve warm." },
-    { name: "Broken Wheat Upma 59", quantity: "1 bowl (250g)", calories: 321, protein: 11, carbs: 41, fats: 16, fiber: 3, price: 62, type: "veg" as const, recipe: "Prepare broken wheat upma 59 using fresh vegetables, minimal oil, and serve warm." },
     { name: "Idli (Ragi+Rice) 60", quantity: "1 serving", calories: 410, protein: 27, carbs: 77, fats: 10, fiber: 7, price: 60, type: "veg" as const, recipe: "Prepare idli (ragi+rice) 60 using fresh vegetables, minimal oil, and serve warm." },
     { name: "Egg White Omelette with Spinach", quantity: "1 plate (300g)", calories: 455, protein: 20, carbs: 70, fats: 13, fiber: 4, price: 197, type: "nonveg" as const, recipe: "Prepare egg white omelette with spinach using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
     { name: "Masala Omelette with Ragi Toast", quantity: "1 serving", calories: 416, protein: 32, carbs: 38, fats: 6, fiber: 4, price: 182, type: "nonveg" as const, recipe: "Prepare masala omelette with ragi toast using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
     { name: "Smoked Salmon on Multigrain", quantity: "1 serving", calories: 402, protein: 22, carbs: 45, fats: 17, fiber: 7, price: 253, type: "nonveg" as const, recipe: "Prepare smoked salmon on multigrain using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
     { name: "Egg Bhurji with Vegetables", quantity: "1 serving", calories: 274, protein: 25, carbs: 43, fats: 11, fiber: 5, price: 89, type: "nonveg" as const, recipe: "Prepare egg bhurji with vegetables using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
-    { name: "Chicken & Vegetable Upma", quantity: "1 plate (300g)", calories: 565, protein: 45, carbs: 54, fats: 29, fiber: 6, price: 191, type: "nonveg" as const, recipe: "Prepare chicken & vegetable upma using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
     { name: "Egg Sandwich", quantity: "1 plate (300g)", calories: 457, protein: 54, carbs: 34, fats: 14, fiber: 1, price: 191, type: "nonveg" as const, recipe: "Prepare egg sandwich using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
     { name: "Egg & Avocado Toast", quantity: "1 plate (300g)", calories: 526, protein: 52, carbs: 35, fats: 17, fiber: 7, price: 97, type: "nonveg" as const, recipe: "Prepare egg & avocado toast using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
     { name: "Turkish Egg (Menemen) style", quantity: "1 serving", calories: 579, protein: 38, carbs: 25, fats: 29, fiber: 5, price: 209, type: "nonveg" as const, recipe: "Prepare turkish egg (menemen) style using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
@@ -239,7 +233,6 @@ const FOOD_DATABASE = {
     { name: " smoked trout on toast", quantity: "1 bowl (250g)", calories: 350, protein: 51, carbs: 69, fats: 7, fiber: 4, price: 111, type: "nonveg" as const, recipe: "Prepare  smoked trout on toast using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
     { name: "Egg Masala Dosa (egg filling)", quantity: "200g serving", calories: 328, protein: 47, carbs: 77, fats: 23, fiber: 6, price: 193, type: "nonveg" as const, recipe: "Prepare egg masala dosa (egg filling) using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
     { name: "Chicken Pancake", quantity: "200g serving", calories: 685, protein: 53, carbs: 67, fats: 11, fiber: 8, price: 195, type: "nonveg" as const, recipe: "Prepare chicken pancake using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
-    { name: "Keema Upma", quantity: "1 serving", calories: 644, protein: 33, carbs: 45, fats: 30, fiber: 8, price: 240, type: "nonveg" as const, recipe: "Prepare keema upma using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
     { name: "Egg Bhurji Wrap", quantity: "1 bowl (250g)", calories: 400, protein: 46, carbs: 19, fats: 28, fiber: 5, price: 140, type: "nonveg" as const, recipe: "Prepare egg bhurji wrap using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
     { name: "Tuna Salad on Toast", quantity: "1 serving", calories: 431, protein: 38, carbs: 79, fats: 8, fiber: 3, price: 118, type: "nonveg" as const, recipe: "Prepare tuna salad on toast using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
     { name: "Salmon Parfait", quantity: "1 bowl (250g)", calories: 456, protein: 27, carbs: 37, fats: 8, fiber: 7, price: 184, type: "nonveg" as const, recipe: "Prepare salmon parfait using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
@@ -251,7 +244,6 @@ const FOOD_DATABASE = {
     { name: "Chicken Omelette Roll", quantity: "1 plate (300g)", calories: 302, protein: 59, carbs: 64, fats: 10, fiber: 8, price: 126, type: "nonveg" as const, recipe: "Prepare chicken omelette roll using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
     { name: "Egg & Veg Hash", quantity: "1 plate (300g)", calories: 393, protein: 42, carbs: 51, fats: 12, fiber: 8, price: 163, type: "nonveg" as const, recipe: "Prepare egg & veg hash using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
     { name: "Smoked Mackerel Toast", quantity: "1 serving", calories: 649, protein: 42, carbs: 45, fats: 30, fiber: 7, price: 144, type: "nonveg" as const, recipe: "Prepare smoked mackerel toast using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
-    { name: "Prawn & Veg Rava Upma", quantity: "1 plate (300g)", calories: 500, protein: 19, carbs: 79, fats: 7, fiber: 6, price: 137, type: "nonveg" as const, recipe: "Prepare prawn & veg rava upma using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
     { name: "Turkey Wrap", quantity: "1 plate (300g)", calories: 659, protein: 59, carbs: 15, fats: 30, fiber: 1, price: 143, type: "nonveg" as const, recipe: "Prepare turkey wrap using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
     { name: "Chicken Tikka Omelette", quantity: "1 bowl (250g)", calories: 689, protein: 19, carbs: 29, fats: 13, fiber: 3, price: 201, type: "nonveg" as const, recipe: "Prepare chicken tikka omelette using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
     { name: "Egg & Quinoa Bowl", quantity: "1 plate (300g)", calories: 548, protein: 31, carbs: 69, fats: 28, fiber: 5, price: 174, type: "nonveg" as const, recipe: "Prepare egg & quinoa bowl using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
@@ -276,7 +268,6 @@ const FOOD_DATABASE = {
     { name: "Masala Omelette with Ragi Toast 55", quantity: "1 bowl (250g)", calories: 411, protein: 32, carbs: 56, fats: 11, fiber: 5, price: 83, type: "nonveg" as const, recipe: "Prepare masala omelette with ragi toast 55 using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
     { name: "Smoked Salmon on Multigrain 56", quantity: "1 bowl (250g)", calories: 400, protein: 20, carbs: 16, fats: 23, fiber: 5, price: 258, type: "nonveg" as const, recipe: "Prepare smoked salmon on multigrain 56 using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
     { name: "Egg Bhurji with Vegetables 57", quantity: "1 bowl (250g)", calories: 586, protein: 49, carbs: 23, fats: 6, fiber: 5, price: 200, type: "nonveg" as const, recipe: "Prepare egg bhurji with vegetables 57 using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
-    { name: "Chicken & Vegetable Upma 58", quantity: "200g serving", calories: 485, protein: 39, carbs: 33, fats: 7, fiber: 5, price: 202, type: "nonveg" as const, recipe: "Prepare chicken & vegetable upma 58 using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
     { name: "Egg Sandwich 59", quantity: "1 plate (300g)", calories: 680, protein: 22, carbs: 61, fats: 21, fiber: 2, price: 227, type: "nonveg" as const, recipe: "Prepare egg sandwich 59 using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
     { name: "Egg & Avocado Toast 60", quantity: "1 plate (300g)", calories: 337, protein: 27, carbs: 48, fats: 8, fiber: 4, price: 110, type: "nonveg" as const, recipe: "Prepare egg & avocado toast 60 using lean protein, seasonal vegetables, and mild spices. Cook until tender." },
   ],
@@ -1123,7 +1114,17 @@ const FOOD_DATABASE = {
                       updateFormData("age", 0);
                     } else {
                       const num = parseInt(val, 10);
-                      if (!isNaN(num) && num >= 15 && num <= 100) updateFormData("age", num);
+                      if (!isNaN(num)) updateFormData("age", num);
+                    }
+                  }}
+                  onBlur={(e) => {
+                    const val = e.target.value;
+                    if (val !== "") {
+                      const num = parseInt(val, 10);
+                      if (!isNaN(num)) {
+                        if (num < 15) updateFormData("age", 15);
+                        else if (num > 100) updateFormData("age", 100);
+                      }
                     }
                   }}
                   className="w-full px-4 py-3 rounded-xl border-2 border-input focus:border-primary focus:outline-none transition-colors bg-white"
@@ -1164,7 +1165,17 @@ const FOOD_DATABASE = {
                       updateFormData("weight", 0);
                     } else {
                       const num = parseFloat(val);
-                      if (!isNaN(num) && num >= 30 && num <= 200) updateFormData("weight", num);
+                      if (!isNaN(num)) updateFormData("weight", num);
+                    }
+                  }}
+                  onBlur={(e) => {
+                    const val = e.target.value;
+                    if (val !== "") {
+                      const num = parseFloat(val);
+                      if (!isNaN(num)) {
+                        if (num < 30) updateFormData("weight", 30);
+                        else if (num > 200) updateFormData("weight", 200);
+                      }
                     }
                   }}
                   className="w-full px-4 py-3 rounded-xl border-2 border-input focus:border-primary focus:outline-none transition-colors bg-white"
@@ -1186,7 +1197,17 @@ const FOOD_DATABASE = {
                       updateFormData("height", 0);
                     } else {
                       const num = parseInt(val, 10);
-                      if (!isNaN(num) && num >= 120 && num <= 250) updateFormData("height", num);
+                      if (!isNaN(num)) updateFormData("height", num);
+                    }
+                  }}
+                  onBlur={(e) => {
+                    const val = e.target.value;
+                    if (val !== "") {
+                      const num = parseInt(val, 10);
+                      if (!isNaN(num)) {
+                        if (num < 120) updateFormData("height", 120);
+                        else if (num > 250) updateFormData("height", 250);
+                      }
                     }
                   }}
                   className="w-full px-4 py-3 rounded-xl border-2 border-input focus:border-primary focus:outline-none transition-colors bg-white"
@@ -1261,7 +1282,17 @@ const FOOD_DATABASE = {
                       updateFormData("budget", 0);
                     } else {
                       const num = parseInt(val, 10);
-                      if (!isNaN(num) && num >= 100 && num <= 5000) updateFormData("budget", num);
+                      if (!isNaN(num)) updateFormData("budget", num);
+                    }
+                  }}
+                  onBlur={(e) => {
+                    const val = e.target.value;
+                    if (val !== "") {
+                      const num = parseInt(val, 10);
+                      if (!isNaN(num)) {
+                        if (num < 100) updateFormData("budget", 100);
+                        else if (num > 5000) updateFormData("budget", 5000);
+                      }
                     }
                   }}
                   className="w-full px-4 py-3 rounded-xl border-2 border-input focus:border-primary focus:outline-none transition-colors bg-white"
